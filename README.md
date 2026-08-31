@@ -104,8 +104,12 @@ python3 automation/update_data.py   # só biblioteca padrão do Python 3.12
 
 Refresh mais "inteligente": reexecuta a pesquisa `/last30days`, atualiza IV estimada, odds do
 Polymarket, números de pesquisa e os trechos de texto, faz commit e **republica o artifact do
-claude.ai**. O prompt está em [`automation/claude-routine.md`](automation/claude-routine.md);
-a configuração do cron e como pausar/remover em [`automation/SCHEDULE.md`](automation/SCHEDULE.md).
+claude.ai**. O prompt está em [`automation/claude-routine.md`](automation/claude-routine.md).
+
+Já está criada: rotina `Refresh semanal — opções eleição 2026`, cron `0 12 * * 1` (segunda
+09:00 BRT), 1ª execução **07/09/2026**. Painel:
+<https://claude.ai/code/routines/trig_01RZQXhvsrXXjPzwEV3NpA39>. Pausar/editar/remover e o
+cron do Actions: [`automation/SCHEDULE.md`](automation/SCHEDULE.md).
 
 ---
 

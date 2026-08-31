@@ -38,34 +38,31 @@ qualquer reativa.
 
 ## 2. Rotina Claude (cobrada por execução)
 
-Um agente Claude Code na nuvem que roda o prompt de [`claude-routine.md`](claude-routine.md)
-em cron. Cada execução consome uso do seu plano.
+Um agente Claude Code **na nuvem** (não no seu computador) que roda o prompt de
+[`claude-routine.md`](claude-routine.md) em cron. Cada execução consome uso do seu plano.
 
-**Sugestão de cron:** semanal, segunda 09:00 BRT (`0 12 * * 1` em UTC).
+### Já criada
 
-### Criar
+| Campo | Valor |
+|---|---|
+| Nome | `Refresh semanal — opções eleição 2026` |
+| ID | `trig_01RZQXhvsrXXjPzwEV3NpA39` |
+| Cron | `0 12 * * 1` (UTC) = **segunda 09:00 BRT** |
+| 1ª execução | **07/09/2026 09:00 BRT** |
+| Modelo | claude-sonnet-5 |
+| Painel | <https://claude.ai/code/routines/trig_01RZQXhvsrXXjPzwEV3NpA39> |
 
-No Claude Code, use a skill `schedule` (ou `/schedule`):
+### Pausar / editar / remover
 
-```
-/schedule criar rotina semanal, segunda 09:00 America/Sao_Paulo,
-que execute o prompt de automation/claude-routine.md do repo timmtimm1/opcoes-eleicao-2026-br
-```
+- **Painel web:** <https://claude.ai/code/routines> — ligar/desligar, editar horário, apagar.
+- **No Claude Code:** `/schedule list` para ver todas; `/schedule` (skill) para editar.
+  Apagar só pelo painel web.
+- **Ver execuções:** no painel da rotina, ou `/schedule` → list runs.
 
-Isso registra um cron job. Confirme com:
+### Mudar o horário
 
-```
-/schedule list
-```
-
-### Pausar / remover
-
-```
-/schedule list              # ver as rotinas e seus IDs
-/schedule remover <id>      # apaga a rotina
-```
-
-Ou, direto: `CronList` para ver, `CronDelete` para apagar.
+Edite pelo painel, ou via `/schedule`: cron em **UTC**. Ex.: quinzenal segunda 09:00 BRT
+não é possível em cron puro; para toda segunda e quinta 09:00 BRT use `0 12 * * 1,4`.
 
 ### O que ela faz (resumo — detalhe em claude-routine.md)
 
