@@ -1,0 +1,9 @@
+# scratch / caches
+__pycache__/
+*.pyc
+.DS_Store
+node_modules/
+*.log
+# nada de credenciais no repo
+.env
+*.token

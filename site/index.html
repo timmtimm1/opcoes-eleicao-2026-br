@@ -1,0 +1,1396 @@
+<title>Volatilidade Eleitoral 2026</title>
+<meta name="description" content="Workbench interativo para montar operações de volatilidade em opções de IBOV, PETR4 e bancos na janela da eleição presidencial de outubro de 2026.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Libre+Franklin:wght@400;600;700;800&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap">
+<style>
+  :root{
+    --bg:#eef1ef; --surface:#ffffff; --surface-2:#f5f8f6; --border:#d8e0db;
+    --ink:#161b18; --ink-2:#4b584f; --ink-3:#78857b;
+    --accent:#0f7350; --accent-ink:#ffffff;
+    --up:#a9631a; --down:#3c6a9e;
+    --profit:#1f9d74; --loss:#bf3f3a; --warn:#b3831a;
+    --chart-grid:#e5eae6; --chart-axis:#b7c2bb;
+    --focus:#0f7350;
+    --shadow:0 1px 2px rgba(20,30,25,.05), 0 10px 30px -14px rgba(20,30,25,.20);
+    --measure:64ch;
+    --font-display:"Libre Franklin", system-ui, -apple-system, sans-serif;
+    --font-body:"Newsreader", Georgia, "Times New Roman", serif;
+    --font-mono:"IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#0d1210; --surface:#141b18; --surface-2:#1a221e; --border:#293530;
+      --ink:#e7ede9; --ink-2:#a8b6ad; --ink-3:#7a897f;
+      --accent:#2fb488; --accent-ink:#04130d;
+      --up:#e0a458; --down:#83aad9;
+      --profit:#34c493; --loss:#e0655f; --warn:#e0b24d;
+      --chart-grid:#222d27; --chart-axis:#3a4842;
+      --focus:#2fb488;
+      --shadow:0 1px 2px rgba(0,0,0,.4), 0 14px 36px -16px rgba(0,0,0,.66);
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#0d1210; --surface:#141b18; --surface-2:#1a221e; --border:#293530;
+    --ink:#e7ede9; --ink-2:#a8b6ad; --ink-3:#7a897f;
+    --accent:#2fb488; --accent-ink:#04130d;
+    --up:#e0a458; --down:#83aad9;
+    --profit:#34c493; --loss:#e0655f; --warn:#e0b24d;
+    --chart-grid:#222d27; --chart-axis:#3a4842;
+    --focus:#2fb488;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 14px 36px -16px rgba(0,0,0,.66);
+  }
+
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font-family:var(--font-body); font-size:18px; line-height:1.62;
+    font-optical-sizing:auto;
+  }
+  h1,h2,h3,h4{font-family:var(--font-display); line-height:1.14; text-wrap:balance; margin:0}
+  h2{font-size:1.55rem; font-weight:800; letter-spacing:-.01em; margin-bottom:.4em}
+  h3{font-size:1.12rem; font-weight:700; letter-spacing:-.005em}
+  p{margin:0 0 1rem}
+  a{color:var(--accent); text-underline-offset:2px}
+  strong{font-weight:600}
+  em{font-style:italic; color:var(--ink-2)}
+  .mono{font-family:var(--font-mono); font-variant-numeric:tabular-nums}
+  .eyebrow{
+    font-family:var(--font-display); font-weight:600; font-size:.72rem;
+    text-transform:uppercase; letter-spacing:.13em; color:var(--ink-3);
+  }
+
+  /* ---- shell ---- */
+  header.bar{
+    position:sticky; top:0; z-index:20;
+    display:flex; align-items:center; gap:1rem; flex-wrap:wrap;
+    padding:.6rem clamp(1rem,4vw,2rem);
+    background:var(--surface);
+    background:color-mix(in srgb, var(--surface) 86%, transparent);
+    backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--border);
+  }
+  .bar .brand{font-family:var(--font-display); font-weight:800; letter-spacing:-.01em; font-size:.98rem}
+  .bar .brand span{color:var(--accent)}
+  .bar .count{
+    font-family:var(--font-mono); font-size:.8rem; color:var(--ink-2);
+    padding:.2rem .55rem; border:1px solid var(--border); border-radius:999px;
+    background:var(--surface-2); white-space:nowrap;
+  }
+  .bar .count b{color:var(--ink); font-weight:600}
+  .bar .spacer{flex:1}
+  .themebtn{
+    font-family:var(--font-mono); font-size:.74rem; color:var(--ink-2);
+    background:var(--surface-2); border:1px solid var(--border); border-radius:999px;
+    padding:.3rem .7rem; cursor:pointer; transition:color .12s, border-color .12s;
+  }
+  .themebtn:hover{color:var(--ink); border-color:var(--ink-3)}
+
+  main{padding:0 clamp(1rem,4vw,2rem) 5rem}
+  .col{max-width:var(--measure); margin:0 auto}
+  .wide{max-width:1120px; margin:0 auto}
+  section{margin-top:3.4rem}
+  section.hero{margin-top:2.4rem}
+
+  /* ---- hero ---- */
+  .hero h1{
+    font-size:clamp(2.1rem,6.4vw,3.5rem); font-weight:800; letter-spacing:-.022em;
+    margin-bottom:.5rem;
+  }
+  .hero .lede{font-size:1.16rem; color:var(--ink-2); max-width:58ch}
+  .thesis{
+    display:grid; grid-template-columns:repeat(auto-fit,minmax(210px,1fr));
+    gap:.75rem; margin-top:1.8rem;
+  }
+  .thesis div{
+    background:var(--surface); border:1px solid var(--border); border-radius:12px;
+    padding:.95rem 1rem; box-shadow:var(--shadow);
+  }
+  .thesis .n{font-family:var(--font-mono); font-size:.72rem; color:var(--accent); font-weight:600}
+  .thesis h4{font-size:.98rem; font-weight:700; margin:.35rem 0 .2rem}
+  .thesis p{font-size:.9rem; color:var(--ink-2); margin:0; line-height:1.5}
+  .chips{display:flex; flex-wrap:wrap; gap:.5rem; margin-top:1.5rem}
+  .chip{
+    font-family:var(--font-mono); font-size:.76rem; color:var(--ink-2);
+    background:var(--surface-2); border:1px solid var(--border);
+    border-radius:8px; padding:.32rem .6rem;
+  }
+  .chip b{color:var(--ink); font-weight:600}
+
+  /* ---- generic card / panel ---- */
+  .panel{
+    background:var(--surface); border:1px solid var(--border); border-radius:16px;
+    padding:clamp(1.1rem,3vw,1.75rem); box-shadow:var(--shadow);
+  }
+
+  /* ---- workbench ---- */
+  .wb{display:grid; grid-template-columns:minmax(0,340px) minmax(0,1fr); gap:1.5rem}
+  @media (max-width:860px){ .wb{grid-template-columns:1fr} }
+  .ctrl{display:flex; flex-direction:column; gap:1rem}
+  .tickrow{display:flex; flex-wrap:wrap; gap:.4rem}
+  .tickrow button{
+    font-family:var(--font-mono); font-size:.78rem; font-weight:500;
+    padding:.34rem .6rem; border-radius:8px; cursor:pointer;
+    border:1px solid var(--border); background:var(--surface-2); color:var(--ink-2);
+    transition:all .12s;
+  }
+  .tickrow button:hover{color:var(--ink); border-color:var(--ink-3)}
+  .tickrow button[aria-pressed="true"]{
+    background:var(--accent); border-color:var(--accent); color:var(--accent-ink);
+  }
+  .field{display:flex; flex-direction:column; gap:.28rem}
+  .field label{
+    font-family:var(--font-display); font-weight:600; font-size:.72rem;
+    text-transform:uppercase; letter-spacing:.09em; color:var(--ink-3);
+  }
+  .field .hint{font-size:.78rem; color:var(--ink-3); line-height:1.4}
+  .field input[type=number], .field input[type=text]{
+    font-family:var(--font-mono); font-size:.92rem; color:var(--ink);
+    background:var(--surface-2); border:1px solid var(--border); border-radius:8px;
+    padding:.5rem .6rem; width:100%;
+  }
+  .field.row2{display:grid; grid-template-columns:1fr 1fr; gap:.6rem}
+  .field.row2 .field{gap:.28rem}
+  .seg{display:flex; border:1px solid var(--border); border-radius:8px; overflow:hidden}
+  .seg button{
+    flex:1; font-family:var(--font-mono); font-size:.78rem; padding:.42rem .3rem;
+    background:var(--surface-2); color:var(--ink-2); border:0; cursor:pointer; transition:all .12s;
+  }
+  .seg button + button{border-left:1px solid var(--border)}
+  .seg button[aria-pressed="true"]{background:var(--accent); color:var(--accent-ink)}
+  input:focus-visible, button:focus-visible, a:focus-visible, [tabindex]:focus-visible{
+    outline:2px solid var(--focus); outline-offset:2px; border-radius:6px;
+  }
+
+  .viz{display:flex; flex-direction:column; gap:.9rem; min-width:0}
+  .chartwrap{width:100%; overflow-x:auto}
+  svg.payoff{width:100%; height:auto; display:block; min-width:520px}
+  svg.payoff text{font-family:var(--font-mono); fill:var(--ink-3)}
+  .legend{display:flex; flex-wrap:wrap; gap:.4rem .9rem; font-family:var(--font-mono); font-size:.74rem; color:var(--ink-2)}
+  .legend span{display:inline-flex; align-items:center; gap:.35rem}
+  .legend i{width:12px; height:0; border-top:2px solid currentColor; display:inline-block}
+  .legend .k{color:var(--ink-3)}
+
+  .metrics{display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:.6rem}
+  .metric{background:var(--surface-2); border:1px solid var(--border); border-radius:10px; padding:.6rem .7rem}
+  .metric .lbl{font-family:var(--font-display); font-weight:600; font-size:.66rem; text-transform:uppercase; letter-spacing:.08em; color:var(--ink-3)}
+  .metric .val{font-family:var(--font-mono); font-size:1rem; font-weight:600; margin-top:.15rem}
+  .metric .val.loss{color:var(--loss)}
+  .metric .val.profit{color:var(--profit)}
+  .metric .sub{font-family:var(--font-mono); font-size:.72rem; color:var(--ink-3)}
+
+  .greeks{display:grid; grid-template-columns:repeat(4,1fr); gap:.5rem}
+  .greeks .g{background:var(--surface-2); border:1px solid var(--border); border-radius:10px; padding:.55rem .6rem; text-align:center}
+  .greeks .g .name{font-family:var(--font-display); font-weight:700; font-size:.8rem}
+  .greeks .g .s{font-family:var(--font-mono); font-size:.78rem; margin-top:.1rem}
+  .greeks .g .s.pos{color:var(--profit)}
+  .greeks .g .s.neg{color:var(--loss)}
+  .greeks .g .bar{height:4px; border-radius:2px; margin-top:.4rem; background:var(--border)}
+  .greeks .g .bar.pos{background:var(--profit)}
+  .greeks .g .bar.neg{background:var(--loss)}
+
+  .note{
+    font-size:.88rem; color:var(--ink-2); background:var(--surface-2);
+    border-left:3px solid var(--accent); border-radius:0 8px 8px 0;
+    padding:.7rem .9rem;
+  }
+  .note strong{color:var(--ink)}
+  .voz{
+    font-family:var(--font-body); font-style:italic; font-size:.92rem; color:var(--ink-2);
+    border-left:3px solid var(--warn); padding:.2rem 0 .2rem .9rem; margin:1rem 0;
+  }
+  .voz b{font-style:normal; font-weight:600; color:var(--ink)}
+
+  /* ---- probability ---- */
+  .prob{display:grid; grid-template-columns:minmax(0,320px) minmax(0,1fr); gap:1.5rem}
+  @media (max-width:820px){ .prob{grid-template-columns:1fr} }
+  .probout{display:flex; flex-direction:column; gap:1rem; justify-content:center}
+  .bigpct{display:flex; gap:1.5rem; flex-wrap:wrap}
+  .bigpct div{flex:1; min-width:130px}
+  .bigpct .p{font-family:var(--font-mono); font-size:2.3rem; font-weight:600; line-height:1}
+  .bigpct .p.inside{color:var(--ink-2)}
+  .bigpct .p.outside{color:var(--accent)}
+  .bigpct .c{font-family:var(--font-display); font-weight:600; font-size:.7rem; text-transform:uppercase; letter-spacing:.09em; color:var(--ink-3); margin-top:.3rem}
+
+  /* ---- timeline ---- */
+  .timeline{display:flex; gap:0; overflow-x:auto; padding-bottom:.4rem}
+  .tl{flex:1 0 170px; position:relative; padding:1.1rem 1rem 0}
+  .tl::before{content:""; position:absolute; top:1.35rem; left:0; right:0; height:2px; background:var(--border)}
+  .tl .dot{position:relative; width:12px; height:12px; border-radius:50%; background:var(--accent); border:2px solid var(--surface); box-shadow:0 0 0 2px var(--accent)}
+  .tl.mut .dot{background:var(--ink-3); box-shadow:0 0 0 2px var(--ink-3)}
+  .tl .d{font-family:var(--font-mono); font-size:.78rem; color:var(--ink); margin-top:.6rem; font-weight:600}
+  .tl .t{font-size:.86rem; color:var(--ink-2); line-height:1.4; margin-top:.15rem}
+
+  /* ---- ticker cards ---- */
+  .tcards{display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:1rem}
+  .tcard{background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:1.1rem; box-shadow:var(--shadow); display:flex; flex-direction:column; gap:.5rem}
+  .tcard .top{display:flex; align-items:baseline; justify-content:space-between; gap:.5rem}
+  .tcard .sym{font-family:var(--font-mono); font-weight:600; font-size:1.05rem}
+  .tcard .sens{font-family:var(--font-display); font-weight:700; font-size:.66rem; text-transform:uppercase; letter-spacing:.07em; padding:.16rem .45rem; border-radius:6px}
+  .sens.alta{background:color-mix(in srgb,var(--loss) 16%,transparent); color:var(--loss)}
+  .sens.media{background:color-mix(in srgb,var(--warn) 18%,transparent); color:var(--warn)}
+  .sens.baixa{background:color-mix(in srgb,var(--down) 18%,transparent); color:var(--down)}
+  .tcard .drv{font-family:var(--font-mono); font-size:.76rem; color:var(--ink-3)}
+  .tcard p{font-size:.9rem; margin:0; color:var(--ink-2); line-height:1.5}
+
+  /* ---- checklist ---- */
+  .prog{height:8px; border-radius:4px; background:var(--surface-2); border:1px solid var(--border); overflow:hidden; margin:.4rem 0 1.2rem}
+  .prog i{display:block; height:100%; width:0; background:var(--accent); transition:width .25s ease}
+  .clgroup{margin-bottom:1.4rem}
+  .clgroup > .eyebrow{display:block; margin-bottom:.5rem}
+  .cli{display:flex; gap:.7rem; padding:.5rem 0; border-bottom:1px solid var(--border); align-items:flex-start}
+  .cli:last-child{border-bottom:0}
+  .cli input{margin-top:.35rem; width:17px; height:17px; accent-color:var(--accent); flex:0 0 auto; cursor:pointer}
+  .cli label{cursor:pointer; font-size:.94rem}
+  .cli label b{font-weight:600}
+  .cli.done label{color:var(--ink-3); text-decoration:line-through}
+  .clbtn{font-family:var(--font-mono); font-size:.76rem; color:var(--ink-2); background:var(--surface-2); border:1px solid var(--border); border-radius:8px; padding:.35rem .7rem; cursor:pointer}
+  .clbtn:hover{color:var(--ink); border-color:var(--ink-3)}
+
+  footer{max-width:var(--measure); margin:4rem auto 0; padding-top:1.5rem; border-top:1px solid var(--border); font-size:.84rem; color:var(--ink-3)}
+  footer p{margin:0 0 .5rem}
+  footer a{color:var(--ink-2)}
+
+  hr.soft{border:0; border-top:1px solid var(--border); margin:2.2rem 0}
+
+  /* ---- plain-language callout ---- */
+  .plain{
+    font-size:.92rem; color:var(--ink-2);
+    background:var(--surface-2);
+    background:color-mix(in srgb, var(--accent) 8%, var(--surface));
+    border:1px solid var(--border);
+    border:1px solid color-mix(in srgb, var(--accent) 32%, var(--border));
+    border-radius:10px; padding:.75rem .9rem; margin:.5rem 0 1.2rem;
+  }
+  .plain b{color:var(--ink); font-weight:600}
+  .plain::before{
+    content:"Resumindo"; display:block;
+    font-family:var(--font-display); font-weight:700; font-size:.64rem;
+    text-transform:uppercase; letter-spacing:.1em; color:var(--accent); margin-bottom:.3rem;
+  }
+
+  /* ---- optimal buy window ---- */
+  .optgrid{display:grid; grid-template-columns:minmax(0,300px) minmax(0,1fr); gap:1.5rem}
+  @media (max-width:820px){ .optgrid{grid-template-columns:1fr} }
+  .optout{display:flex; flex-direction:column; gap:1rem}
+  .status{
+    font-family:var(--font-display); font-weight:700; font-size:.95rem; line-height:1.35;
+    padding:.65rem .85rem; border-radius:10px;
+  }
+  .status.open{background:color-mix(in srgb,var(--profit) 16%,transparent); color:var(--profit)}
+  .status.soon{background:color-mix(in srgb,var(--down) 16%,transparent); color:var(--down)}
+  .status.late{background:color-mix(in srgb,var(--warn) 20%,transparent); color:var(--warn)}
+  .status.past{background:color-mix(in srgb,var(--loss) 16%,transparent); color:var(--loss)}
+  .optrows{display:grid; grid-template-columns:1fr 1fr; gap:.6rem}
+  .optrows .m{background:var(--surface-2); border:1px solid var(--border); border-radius:10px; padding:.6rem .7rem}
+  .optrows .m .k{font-family:var(--font-display); font-weight:600; font-size:.62rem; text-transform:uppercase; letter-spacing:.08em; color:var(--ink-3)}
+  .optrows .m .v{font-family:var(--font-mono); font-size:.95rem; font-weight:600; margin-top:.15rem}
+  .optrows .m .s{font-family:var(--font-mono); font-size:.7rem; color:var(--ink-3)}
+  svg.optbar{width:100%; height:auto; display:block; min-width:520px}
+  svg.optbar text{font-family:var(--font-mono); fill:var(--ink-3)}
+  .slider{display:flex; flex-direction:column; gap:.32rem}
+  .slider label{font-family:var(--font-display); font-weight:600; font-size:.72rem; text-transform:uppercase; letter-spacing:.09em; color:var(--ink-3)}
+  .slider input[type=range]{width:100%; accent-color:var(--accent); cursor:pointer}
+  .slider .val{font-family:var(--font-mono); font-size:.82rem; color:var(--ink-2)}
+  .timelist p{margin:.25rem 0; font-size:.88rem; line-height:1.5}
+  .timelist .ok{color:var(--profit); font-weight:600}
+  .timelist .no{color:var(--loss); font-weight:600}
+
+  /* ---- glossary ---- */
+  .glossfilter{
+    width:100%; font-family:var(--font-mono); font-size:.9rem; color:var(--ink);
+    background:var(--surface-2); border:1px solid var(--border); border-radius:10px;
+    padding:.6rem .75rem; margin-bottom:1.1rem;
+  }
+  .terms{display:grid; grid-template-columns:repeat(auto-fill,minmax(258px,1fr)); gap:.75rem; margin:0}
+  .term{background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:.8rem .9rem}
+  .term dt{font-family:var(--font-display); font-weight:700; font-size:.9rem; margin-bottom:.25rem; color:var(--ink)}
+  .term dd{margin:0; font-size:.87rem; color:var(--ink-2); line-height:1.5}
+  .term .tag{font-family:var(--font-mono); font-size:.64rem; color:var(--ink-3); display:block; margin-top:.4rem; letter-spacing:.02em}
+  .term.hide{display:none}
+  .glossnone{font-size:.9rem; color:var(--ink-3); font-style:italic}
+
+  @media (prefers-reduced-motion: reduce){
+    *{animation:none !important; transition:none !important}
+    svg.payoff .draw{stroke-dasharray:none !important; stroke-dashoffset:0 !important}
+  }
+</style>
+
+<header class="bar">
+  <div class="brand">Volatilidade <span>Eleitoral</span> 2026</div>
+  <div class="count" id="count">calculando…</div>
+  <div class="count" id="datastamp" hidden></div>
+  <div class="spacer"></div>
+  <button class="themebtn" id="themebtn" type="button" aria-label="Alternar tema">tema: auto</button>
+</header>
+
+<main>
+  <section class="hero col">
+    <p class="eyebrow">Opções · B3 · janela eleitoral</p>
+    <h1>Montar volatilidade na eleição, sem apostar no vencedor</h1>
+    <p class="lede">
+      A eleição de 4 de outubro está empatada, e o que mexe com a bolsa é a
+      <em>confiança no lado fiscal</em> (se o próximo governo vai segurar os gastos),
+      não o nome de quem ganha. Como o susto pode vir para os dois lados, dá para
+      tentar ganhar com o <strong>tamanho do movimento</strong> — sem apostar em quem vence.
+      Esta página monta essa operação passo a passo, com foco em
+      <strong>IBOV, PETR4 e bancos</strong>.
+    </p>
+    <p style="font-size:.92rem"><a href="#glossario">Não conhece um termo? Pule para a legenda ↓</a></p>
+
+    <div class="thesis">
+      <div>
+        <span class="n">01</span>
+        <h4>Evento binário com cauda</h4>
+        <p>Lula ~3–6 pts à frente de Flávio Bolsonaro; cenários de 2º turno dentro da margem de erro.</p>
+      </div>
+      <div>
+        <span class="n">02</span>
+        <h4>Transmissão fiscal</h4>
+        <p>Goldman: câmbio pode andar −4% a +3% conforme a leitura fiscal. O movimento é bidirecional.</p>
+      </div>
+      <div>
+        <span class="n">03</span>
+        <h4>Catalisadores empilhados</h4>
+        <p>COPOM 16–17/09, 1º turno 04/10, 2º turno 25/10 — tudo em ~7 semanas.</p>
+      </div>
+      <div>
+        <span class="n">04</span>
+        <h4>A vol já se mexe</h4>
+        <p>Ibovespa caiu 2,5% em 11/08 citando a eleição. O prêmio do evento já começou a entrar no preço.</p>
+      </div>
+    </div>
+
+    <div class="chips" aria-label="o que a pesquisa recente indica">
+      <span class="chip">Polymarket <b>~US$23M</b> no mercado presidencial</span>
+      <span class="chip">1º turno <b>04/10/2026</b></span>
+      <span class="chip">2º turno <b>25/10/2026</b></span>
+      <span class="chip" data-chip="ibov">IBOV <b>~168.000</b></span>
+      <span class="chip">Ibovespa VIX = <b>ponto cego</b> (sem print público)</span>
+    </div>
+
+    <div class="voz">
+      <b>Voz do livro (ch.&nbsp;9).</b> Quando a volatilidade implícita está alta, o livro manda
+      <em>vender</em> opção, não comprar. Antes de uma eleição ela quase sempre está alta — o susto
+      já entrou no preço. Então comprar um straddle "no seco" é remar contra o próprio sinal.
+      A saída: comprar o par de opções (uma para cima, uma para baixo) e <b>vender duas pontas
+      mais distantes</b> para baratear a conta e travar a perda.
+    </div>
+  </section>
+
+  <section class="col">
+    <p class="eyebrow">O instrumento</p>
+    <h2>Strangle de risco definido</h2>
+    <p>
+      O livro chama de "instrumento de volatilidade" a dupla <strong>1 call fora do dinheiro
+      + 1 put fora do dinheiro</strong>, com o mesmo vencimento (ch.&nbsp;6.7). Você ganha se o
+      ativo disparar para qualquer lado, ou se a volatilidade subir. O problema: se o ativo
+      ficar parado, essa dupla pode perder <strong>100% do que você pagou</strong>, e o
+      <strong>theta</strong> (o desgaste do tempo) corrói o prêmio todo dia.
+    </p>
+    <p>
+      A correção é <strong>vender duas opções ainda mais distantes</strong> (as "asas"). Isso
+      deixa a montagem mais barata, reduz o desgaste diário e — o principal — faz você saber,
+      no dia em que monta, qual é a maior perda possível. O preço disso é um teto no lucro:
+      se vier um movimento gigante (como o "grau de investimento" no exemplo da ch.&nbsp;12),
+      as asas seguram o ganho. É uma troca consciente: menos lucro possível, em troca de risco
+      conhecido.
+    </p>
+    <div class="plain col" style="margin-left:0">
+      Você compra um "seguro para os dois lados" e vende dois "seguros mais baratos" para pagar
+      parte da conta. Fica sabendo desde o começo quanto pode perder — e abre mão do lucro
+      além de um certo ponto.
+    </div>
+  </section>
+
+  <section class="wide">
+    <p class="eyebrow">Ferramenta</p>
+    <h2>Workbench de payoff</h2>
+    <p class="col" style="margin-left:0">
+      Escolha o ativo e mexa nos controles: preço atual (spot), volatilidade esperada (IV),
+      dias até o vencimento e a distância dos strikes. O gráfico mostra quanto você ganha ou
+      perde em cada preço final. Os prêmios são calculados pela fórmula de Black-Scholes
+      (ch.&nbsp;9) — ou digite os valores reais da corretora. Tudo aqui é <strong>exemplo</strong>:
+      confirme a tela antes de operar.
+    </p>
+    <div class="panel wb" style="margin-top:1rem">
+      <div class="ctrl">
+        <div class="field">
+          <label>Ativo-objeto</label>
+          <div class="tickrow" id="tickrow" role="group" aria-label="ativo">
+            <button type="button" data-t="IBOV">IBOV</button>
+            <button type="button" data-t="PETR4">PETR4</button>
+            <button type="button" data-t="BBAS3">BBAS3</button>
+            <button type="button" data-t="ITUB4">ITUB4</button>
+            <button type="button" data-t="BBDC4">BBDC4</button>
+          </div>
+          <span class="hint" id="tickhint"></span>
+        </div>
+
+        <div class="field row2">
+          <div class="field">
+            <label for="spot">Spot</label>
+            <input type="number" id="spot" step="any" inputmode="decimal">
+          </div>
+          <div class="field">
+            <label for="iv">IV anual %</label>
+            <input type="number" id="iv" step="1" inputmode="decimal">
+          </div>
+        </div>
+
+        <div class="field row2">
+          <div class="field">
+            <label for="days">Dias até o venc.</label>
+            <input type="number" id="days" step="1" inputmode="numeric">
+          </div>
+          <div class="field">
+            <label for="rate">Juro (SELIC) %</label>
+            <input type="number" id="rate" step="0.5" inputmode="decimal">
+          </div>
+        </div>
+
+        <div class="field row2">
+          <div class="field">
+            <label for="inner">Strikes comprados ±%</label>
+            <input type="number" id="inner" step="0.5" inputmode="decimal">
+          </div>
+          <div class="field">
+            <label for="outer">Asas vendidas ±%</label>
+            <input type="number" id="outer" step="0.5" inputmode="decimal">
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Pernas</label>
+          <div class="seg" id="legseg" role="group" aria-label="número de pernas">
+            <button type="button" data-legs="2">Strangle simples (2)</button>
+            <button type="button" data-legs="4">Risco definido (4)</button>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Prêmios</label>
+          <div class="seg" id="modeseg" role="group" aria-label="fonte dos prêmios">
+            <button type="button" data-mode="bs">Black-Scholes</button>
+            <button type="button" data-mode="manual">Débito do mercado</button>
+          </div>
+          <div class="field" id="manualwrap" hidden>
+            <label for="debit" style="margin-top:.5rem">Débito líquido por unidade</label>
+            <input type="number" id="debit" step="any" inputmode="decimal">
+            <span class="hint">Custo total pago para montar, por ação/ponto (antes do multiplicador).</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="viz">
+        <div class="chartwrap">
+          <svg class="payoff" id="chart" viewBox="0 0 860 440" role="img" aria-labelledby="charttitle"></svg>
+          <span id="charttitle" hidden>Diagrama de payoff no vencimento</span>
+        </div>
+        <div class="legend" id="legend"></div>
+
+        <div class="metrics" id="metrics"></div>
+
+        <div class="field">
+          <label>Posição nas gregas</label>
+          <div class="greeks" id="greeks"></div>
+        </div>
+
+        <div class="note" id="wbnote"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="wide">
+    <p class="eyebrow">Ferramenta</p>
+    <h2>Chance de terminar fora da faixa</h2>
+    <p class="col" style="margin-left:0">
+      Usando a conta de probabilidade da ch.&nbsp;6, dá para estimar a chance de o ativo
+      terminar <strong>dentro</strong> ou <strong>fora</strong> da faixa entre os dois strikes
+      comprados. Se você segurar até o vencimento, a operação só ganha se o preço terminar
+      <strong>fora</strong> dessa faixa — por isso o normal é sair antes, no meio do movimento.
+      <span class="mono" style="font-size:.82em; color:var(--ink-3)">fórmula: P(spot&lt;F) = N([ln(F/S) − (r − σ²/2)·t] / (σ·√t))</span>
+    </p>
+    <div class="panel prob" style="margin-top:1rem">
+      <div class="ctrl">
+        <button class="clbtn" id="pullwb" type="button">↧ Usar dados do workbench</button>
+        <div class="field row2">
+          <div class="field"><label for="pspot">Spot</label><input type="number" id="pspot" step="any"></div>
+          <div class="field"><label for="piv">IV anual %</label><input type="number" id="piv" step="1"></div>
+        </div>
+        <div class="field row2">
+          <div class="field"><label for="pdays">Dias</label><input type="number" id="pdays" step="1"></div>
+          <div class="field"><label for="prate">Juro %</label><input type="number" id="prate" step="0.5"></div>
+        </div>
+        <div class="field row2">
+          <div class="field"><label for="plow">Faixa — piso</label><input type="number" id="plow" step="any"></div>
+          <div class="field"><label for="phigh">Faixa — teto</label><input type="number" id="phigh" step="any"></div>
+        </div>
+      </div>
+      <div class="probout">
+        <div class="bigpct">
+          <div><div class="p inside" id="pin">—</div><div class="c">dentro da faixa</div></div>
+          <div><div class="p outside" id="pout">—</div><div class="c">fora → a favor da operação</div></div>
+        </div>
+        <div class="note" id="probnote"></div>
+        <div class="voz" style="margin:0">
+          <b>Voz do livro (ch.&nbsp;12).</b> Segurar até o vencimento é a estratégia "avestruz".
+          A operação de vol ganha <em>no caminho</em> — vendendo na alta de volatilidade ou no
+          gap pós-1º turno — não esperando o desfecho.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="wide">
+    <p class="eyebrow">Calendário</p>
+    <h2>A janela é comprimida</h2>
+    <div class="timeline">
+      <div class="tl mut">
+        <div class="dot"></div>
+        <div class="d">16–17 set</div>
+        <div class="t">Reunião do Banco Central (COPOM). O mercado espera corte de juros; o Fed dos EUA pode subir nos mesmos dias. Mexe com os bancos privados (Itaú, Bradesco).</div>
+      </div>
+      <div class="tl">
+        <div class="dot"></div>
+        <div class="d">04 out</div>
+        <div class="t">1º turno (domingo). Apuração à noite → a bolsa pode abrir com salto (gap) na segunda 05/10.</div>
+      </div>
+      <div class="tl mut">
+        <div class="dot"></div>
+        <div class="d">05–24 out</div>
+        <div class="t">Caminho até o 2º turno. Se a disputa seguir apertada, a volatilidade fica alta o tempo todo.</div>
+      </div>
+      <div class="tl">
+        <div class="dot"></div>
+        <div class="d">25 out</div>
+        <div class="t">2º turno, se ninguém tiver maioria no 1º. O grande momento de decisão.</div>
+      </div>
+      <div class="tl mut">
+        <div class="dot"></div>
+        <div class="d">~20 nov</div>
+        <div class="t">Vencimento das opções de novembro (3ª sexta do mês). Escolha uma série que cubra os <b>dois</b> turnos.</div>
+      </div>
+    </div>
+    <p class="col" style="margin-left:0; margin-top:1.2rem">
+      Regra prática: <strong>não</strong> use a série de outubro — ela expira <em>entre</em> os turnos.
+      A de novembro cobre a apuração final e ainda deixa margem para desmontar.
+    </p>
+  </section>
+
+  <section class="wide">
+    <p class="eyebrow">Ferramenta</p>
+    <h2>Quando comprar: janela ideal por ativo</h2>
+    <p class="col" style="margin-left:0">
+      Não existe "dia mágico". O que existe é uma <strong>faixa de dias</strong> em que comprar
+      faz mais sentido: perto o suficiente do evento para a volatilidade já estar esquentando,
+      mas longe o bastante do vencimento para o <strong>theta</strong> (o desgaste diário da opção)
+      ainda não estar comendo o prêmio. A ferramenta calcula essa faixa a partir do catalisador
+      de cada ativo e do dia de hoje.
+    </p>
+    <div class="plain col" style="margin-left:0">
+      <b>PETR4, BBAS3 e IBOV</b> reagem à <b>eleição</b> → a conta usa o 1º turno (04/10).
+      <b>ITUB4 e BBDC4</b> reagem mais aos <b>juros</b> → a conta usa a reunião do COPOM (17/09).
+    </div>
+    <div class="panel optgrid" style="margin-top:1rem">
+      <div class="ctrl">
+        <div class="field">
+          <label>Ativo</label>
+          <div class="tickrow" id="opttickrow" role="group" aria-label="ativo para a janela de compra">
+            <button type="button" data-t="IBOV">IBOV</button>
+            <button type="button" data-t="PETR4">PETR4</button>
+            <button type="button" data-t="BBAS3">BBAS3</button>
+            <button type="button" data-t="ITUB4">ITUB4</button>
+            <button type="button" data-t="BBDC4">BBDC4</button>
+          </div>
+        </div>
+        <div class="slider">
+          <label for="optlead">Antecedência</label>
+          <input type="range" id="optlead" min="8" max="30" step="1">
+          <span class="val" id="optleadval"></span>
+          <span class="hint">Quantos pregões antes do catalisador você quer estar posicionado.
+            Mais cedo = paga mais theta; mais tarde = corre o risco de a volatilidade já ter subido.</span>
+        </div>
+        <div class="field">
+          <label>Horário do pregão (B3: 10:00–17:00)</label>
+          <div class="timelist">
+            <p><span class="ok">Melhor:</span> 10:30–11:30 ou 13:30–15:00. Mercado mais calmo, diferença entre
+              preço de compra e de venda (spread) mais apertada.</p>
+            <p><span class="no">Evitar:</span> os 15 primeiros minutos (leilão de abertura ainda ecoando),
+              a última meia hora (leilão de fechamento), 10:30 em dias de dado forte dos EUA, e os minutos
+              ao redor da divulgação do COPOM ou da boca de urna.</p>
+          </div>
+        </div>
+      </div>
+      <div class="optout">
+        <div class="status" id="optstatus">…</div>
+        <div class="chartwrap">
+          <svg class="optbar" id="optbar" viewBox="0 0 860 70" role="img" aria-label="linha do tempo da janela de compra"></svg>
+        </div>
+        <div class="optrows" id="optrows"></div>
+        <div class="note">
+          <strong>Como ler.</strong> Verde = faixa ideal de compra. Âmbar = ainda dá, mas o theta já pesa.
+          Vermelho perto do vencimento = zona onde a opção perde valor rápido (ch.&nbsp;10). O ponto
+          "hoje" anda sozinho conforme os dias passam — reabra a página perto do evento.
+        </div>
+        <div class="voz" style="margin:0">
+          <b>Voz do livro (ch.&nbsp;11.6).</b> Para quem <em>vende</em> opção todo mês, o melhor momento é
+          exatamente um mês antes do vencimento. Para quem <em>compra</em> volatilidade, a lógica se
+          inverte: entre quando o "seguro" ainda está barato e saia antes de o tempo derreter o prêmio.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="col">
+    <p class="eyebrow">Veículos</p>
+    <h2>PETR4 e bancos: sensibilidade eleitoral</h2>
+    <p>
+      Na B3, as opções com liquidez de verdade estão no índice e em umas poucas ações grandes,
+      quase sempre perto do preço atual e de vencimento curto — igualzinho ao que o livro conta
+      da BOVESPA de 2008 (ch.&nbsp;2). Depois do IBOV, PETR4 e os grandes bancos são onde dá para
+      montar as quatro pernas sem pagar um <em>spread</em> (diferença entre compra e venda) alto demais.
+    </p>
+  </section>
+  <section class="wide" style="margin-top:1.2rem">
+    <div class="tcards">
+      <div class="tcard">
+        <div class="top"><span class="sym">PETR4</span><span class="sens alta">Reage muito</span></div>
+        <div class="drv">preço dos combustíveis · dividendos · troca de diretoria</div>
+        <p>
+          A ação mais sensível à eleição. A empresa é controlada pelo governo, então a política de
+          preços dos combustíveis, os dividendos e a troca de diretoria mudam conforme quem ganha.
+          É a "PETRA50" do livro. O <strong>sorriso da volatilidade</strong> (ch.&nbsp;9) deixa a put
+          de proteção cara — mas o movimento também é o maior. Vender a asa de baixa ajuda a pagar
+          essa proteção.
+        </p>
+      </div>
+      <div class="tcard">
+        <div class="top"><span class="sym">BBAS3</span><span class="sens alta">Reage muito</span></div>
+        <div class="drv">banco estatal · crédito subsidiado · dividendos</div>
+        <p>
+          O Banco do Brasil é estatal, então carrega risco político direto: crédito direcionado,
+          política de dividendos e gestão mudam com o governo. É o banco que mais reage à eleição.
+          O livro usa <strong>BBAS3 com "beta" 0,757</strong> no exemplo do CAPM (ch.&nbsp;5): oscila
+          menos que o índice no dia a dia, mas a eleição concentra o risco.
+        </p>
+      </div>
+      <div class="tcard">
+        <div class="top"><span class="sym">ITUB4</span><span class="sens baixa">Reage pouco</span></div>
+        <div class="drv">taxa de juros · ciclo de crédito</div>
+        <p>
+          O Itaú é movido por <strong>juros e crédito</strong>, não por política eleitoral direta.
+          O que importa aqui é a decisão do COPOM em 16–17/09, não a apuração. Volatilidade e prêmio
+          menores → montagem mais barata, mas o movimento esperado também é menor.
+        </p>
+      </div>
+      <div class="tcard">
+        <div class="top"><span class="sym">BBDC4</span><span class="sens media">Reage médio</span></div>
+        <div class="drv">taxa de juros · inadimplência · reestruturação</div>
+        <p>
+          O Bradesco fica no meio: sensível a juros como o Itaú, mas com uma história própria de
+          reestruturação que adiciona balanço extra. Serve como perna de um par se você quiser
+          espalhar o risco entre nomes diferentes.
+        </p>
+      </div>
+    </div>
+    <div class="voz col" style="margin-left:0; margin-top:1.4rem">
+      <b>Como escolher.</b> Se a sua ideia é o <em>evento político</em>, concentre em PETR4 e BBAS3
+      (mexem mais, mas o prêmio pago é maior). Se a ideia é <em>choque de juros</em>, use ITUB4 ou
+      BBDC4 no vencimento que pega o COPOM. Uma cesta IBOV + PETR4 dilui parte do ruído de cada
+      empresa e mantém a exposição ao evento.
+    </div>
+  </section>
+
+  <section class="wide">
+    <p class="eyebrow">Antes de enviar a ordem</p>
+    <h2>Estratégia escrita (ch. 11.21)</h2>
+    <p class="col" style="margin-left:0">
+      O livro é explícito: monte a operação <strong>só</strong> depois de escrever a estratégia.
+      O objetivo não é acertar 100% — é soma zero — é <strong>controle de risco e emocional</strong>.
+      Progresso salvo neste navegador.
+    </p>
+    <div class="panel" style="margin-top:1rem">
+      <div class="prog"><i id="progbar"></i></div>
+      <div id="checklist"></div>
+      <button class="clbtn" id="clreset" type="button">Limpar tudo</button>
+    </div>
+  </section>
+
+  <section class="wide" id="glossario">
+    <p class="eyebrow">Legenda</p>
+    <h2>Todos os termos, em português claro</h2>
+    <p class="col" style="margin-left:0">Cada palavra difícil usada nesta página, explicada. Digite para filtrar.</p>
+    <input type="text" class="glossfilter" id="glossfilter" placeholder="filtrar… (ex.: theta, strike, pregão)" aria-label="filtrar glossário">
+    <p class="glossnone" id="glossnone" hidden>Nenhum termo com esse texto.</p>
+    <dl class="terms" id="terms">
+      <div class="term"><dt>Opção de compra (call)</dt><dd>Direito de comprar o ativo por um preço fixo até uma data. Você paga um prêmio por esse direito e não é obrigado a usar.<span class="tag">básico · cap. 2</span></dd></div>
+      <div class="term"><dt>Opção de venda (put)</dt><dd>Direito de vender o ativo por um preço fixo até uma data. Funciona como um seguro contra queda.<span class="tag">básico · cap. 2</span></dd></div>
+      <div class="term"><dt>Strike (preço de exercício)</dt><dd>O preço "combinado" que a opção garante. A call vira dinheiro quando o ativo passa do strike; a put, quando cai abaixo dele.<span class="tag">básico · cap. 2</span></dd></div>
+      <div class="term"><dt>Prêmio</dt><dd>O preço da opção. Quem compra paga; quem lança (vende) recebe.<span class="tag">básico · cap. 2</span></dd></div>
+      <div class="term"><dt>Spot</dt><dd>O preço do ativo agora, no mercado à vista.<span class="tag">básico · cap. 2</span></dd></div>
+      <div class="term"><dt>Ativo-objeto</dt><dd>A ação ou o índice sobre o qual a opção é escrita (PETR4, IBOV…). Também chamado de ativo subjacente.<span class="tag">básico · cap. 2</span></dd></div>
+      <div class="term"><dt>Lote / multiplicador</dt><dd>Quantas unidades do ativo cada contrato representa. Em ações, 100 por lote. O resultado em reais = ganho por unidade × multiplicador.<span class="tag">básico · cap. 2</span></dd></div>
+      <div class="term"><dt>ITM / ATM / OTM</dt><dd>"Dentro / no / fora do dinheiro". ITM já tem valor de exercício; ATM está no limite (strike ≈ spot); OTM ainda não vale nada de exercício.<span class="tag">básico · cap. 2</span></dd></div>
+      <div class="term"><dt>Virar pó</dt><dd>A opção chega ao vencimento sem valor de exercício. Todo o prêmio pago é perdido.<span class="tag">básico · cap. 2</span></dd></div>
+      <div class="term"><dt>Volatilidade</dt><dd>O tamanho típico das oscilações do ativo, em % ao ano. Mais volatilidade = opções mais caras.<span class="tag">estatística · cap. 6</span></dd></div>
+      <div class="term"><dt>Volatilidade implícita (IV)</dt><dd>A volatilidade "embutida" no preço da opção — quanto de balanço o mercado espera daqui para frente. É o verdadeiro "preço" da opção para o profissional.<span class="tag">estatística · cap. 9</span></dd></div>
+      <div class="term"><dt>Volatilidade histórica</dt><dd>A volatilidade calculada a partir do que o ativo já fez no passado. Serve para julgar se a IV está cara ou barata.<span class="tag">estatística · cap. 6</span></dd></div>
+      <div class="term"><dt>Distribuição log-normal / desvio padrão</dt><dd>O modelo estatístico dos preços futuros possíveis. "1 desvio padrão" é a faixa onde o preço cai em cerca de 68% das vezes.<span class="tag">estatística · cap. 6</span></dd></div>
+      <div class="term"><dt>Sorriso da volatilidade</dt><dd>Fenômeno em que opções muito ITM ou muito OTM têm IV maior (ficam relativamente mais caras) do que as ATM. Deixa a put OTM de proteção salgada.<span class="tag">mercado · cap. 9</span></dd></div>
+      <div class="term"><dt>Delta</dt><dd>Quanto o prêmio sobe se o ativo subir R$ 1. Também é a chance aproximada de a opção terminar valendo algo.<span class="tag">grega · cap. 10</span></dd></div>
+      <div class="term"><dt>Gama</dt><dd>Quanto o próprio delta muda quando o ativo se move. É maior perto do strike e dispara perto do vencimento.<span class="tag">grega · cap. 10</span></dd></div>
+      <div class="term"><dt>Theta</dt><dd>O desgaste diário: quanto de prêmio a opção perde a cada dia que passa, tudo o mais constante. É o maior inimigo de quem compra opção.<span class="tag">grega · cap. 10</span></dd></div>
+      <div class="term"><dt>Vega</dt><dd>Quanto o prêmio muda se a volatilidade implícita subir 1 ponto. Comprar opção = ganhar se a vol sobe.<span class="tag">grega · cap. 10</span></dd></div>
+      <div class="term"><dt>Rho</dt><dd>Sensibilidade do prêmio à taxa de juros. Pouco relevante no curto prazo; mais importante em bancos privados no ciclo do COPOM.<span class="tag">grega · cap. 10</span></dd></div>
+      <div class="term"><dt>Strangle</dt><dd>Comprar uma call OTM e uma put OTM de mesmo vencimento. Ganha se o ativo escapar da faixa para qualquer lado, ou se a vol subir. É a "aposta em movimento".<span class="tag">operação · cap. 6 e 11</span></dd></div>
+      <div class="term"><dt>Trava / asa</dt><dd>Uma perna vendida mais distante que limita o risco (ou o custo). Vender as duas asas de um strangle o transforma numa operação de perda limitada.<span class="tag">operação · cap. 11</span></dd></div>
+      <div class="term"><dt>Débito líquido</dt><dd>O dinheiro que sai da sua conta para montar a operação (prêmios pagos menos prêmios recebidos). Numa operação de risco definido, é a perda máxima.<span class="tag">operação · cap. 11</span></dd></div>
+      <div class="term"><dt>Ponto de empate (breakeven)</dt><dd>O preço do ativo no qual a operação não ganha nem perde. O strangle tem dois: um para baixo, um para cima.<span class="tag">operação · cap. 11</span></dd></div>
+      <div class="term"><dt>Calendar (spread de calendário)</dt><dd>Vender a opção de vencimento curto e comprar a de vencimento longo, mesmo strike. Fica exposto à vol pagando menos theta — útil quando a ponta curta está cara.<span class="tag">operação · cap. 11.11</span></dd></div>
+      <div class="term"><dt>Rolagem</dt><dd>Desmontar a operação atual e remontar outra ajustada (por exemplo, reancorar os strikes depois que o ativo andou). Evita realizar a primeira no prejuízo.<span class="tag">operação · cap. 6.7</span></dd></div>
+      <div class="term"><dt>IV crush</dt><dd>A queda brusca da volatilidade implícita logo depois de um evento. As opções esvaziam mesmo que o ativo tenha se mexido. Por isso não se compra vol "em cima" do evento.<span class="tag">mercado · cap. 9</span></dd></div>
+      <div class="term"><dt>Soma zero</dt><dd>O ganho de um lado é exatamente a perda do outro. O mercado de opções é soma zero (levemente negativo com corretagem): nenhuma estratégia tem vantagem garantida.<span class="tag">mercado · cap. 1 e 11</span></dd></div>
+      <div class="term"><dt>Prêmio do evento</dt><dd>A parte extra da IV que o mercado cobra só porque há uma data marcada de risco à frente. Some (o "crush") depois que o evento passa.<span class="tag">mercado · cap. 9</span></dd></div>
+      <div class="term"><dt>COPOM</dt><dd>Comitê de Política Monetária do Banco Central. Decide a taxa Selic a cada ~45 dias. A decisão de 17/09/2026 é o catalisador de juros desta janela.<span class="tag">mercado</span></dd></div>
+      <div class="term"><dt>Selic</dt><dd>A taxa básica de juros da economia brasileira. Sobe o valor das calls e derruba o das puts (efeito rho).<span class="tag">mercado · cap. 4</span></dd></div>
+      <div class="term"><dt>Pregão</dt><dd>O dia de negociação da bolsa. A B3 negocia opções das 10:00 às 17:00; "pregões" são só dias úteis, sem fim de semana e feriado.<span class="tag">mercado / B3</span></dd></div>
+      <div class="term"><dt>Leilão de abertura / fechamento</dt><dd>Janelas de formação de preço no início (09:45–10:00) e no fim (16:55–17:00) do pregão. Spreads mais largos e preços mais instáveis — evite operar em cima delas.<span class="tag">mercado / B3</span></dd></div>
+      <div class="term"><dt>Gap</dt><dd>O salto de preço entre o fechamento de um dia e a abertura do seguinte, típico depois de notícia de fim de semana ou da apuração de domingo.<span class="tag">mercado / B3</span></dd></div>
+      <div class="term"><dt>Beta</dt><dd>Quanto uma ação costuma oscilar em relação ao índice. Beta 0,76 = oscila ~76% do que o Ibovespa oscila. Mede o risco que não some com diversificação.<span class="tag">estatística · cap. 5</span></dd></div>
+      <div class="term"><dt>Black-Scholes</dt><dd>A fórmula clássica que estima o "preço justo" de uma opção europeia a partir de spot, strike, juro, prazo e volatilidade.<span class="tag">precificação · cap. 9</span></dd></div>
+    </dl>
+  </section>
+
+  <footer class="col">
+    <p><strong>Fontes.</strong> Pesquisa de mercado via <span class="mono">/last30days</span> (run de 31/08/2026:
+    Polymarket, X, Rio Times, Goldman/SocGen/Commerzbank via web) + skill
+    <span class="mono">pfutzenreuter-opcoes</span> (livro <em>Investindo no Mercado de Opções</em>, Elvis Pfützenreuter, Novatec).</p>
+    <p><strong>Aviso.</strong> Conteúdo educativo, não recomendação de investimento. Spots, IV, prêmios e strikes
+    são ilustrativos — o mercado de opções é soma zero e nenhuma estratégia garante lucro (ch.&nbsp;1 e 11).
+    Confirme a cadeia real, a tributação e os custos de corretagem das quatro pernas (ch.&nbsp;11.20) antes de operar.</p>
+    <p>Gerado em 31 de agosto de 2026. As datas de "janela ideal de compra" e a contagem regressiva
+    usam o calendário real — reabra a página perto do evento para ver a situação atualizada.</p>
+  </footer>
+</main>
+
+<script>
+(function(){
+  "use strict";
+  var $ = function(id){ return document.getElementById(id); };
+
+  /* ---------- theme ---------- */
+  var THEME_KEY = "vol2026-theme";
+  var themeBtn = $("themebtn");
+  function readLS(k){ try{ return localStorage.getItem(k); }catch(e){ return null; } }
+  function writeLS(k,v){ try{ localStorage.setItem(k,v); }catch(e){} }
+  function applyTheme(mode){
+    if(mode === "light" || mode === "dark"){ document.documentElement.setAttribute("data-theme", mode); }
+    else { document.documentElement.removeAttribute("data-theme"); }
+    themeBtn.textContent = "tema: " + (mode || "auto");
+  }
+  var themeMode = readLS(THEME_KEY) || "auto";
+  applyTheme(themeMode);
+  themeBtn.addEventListener("click", function(){
+    themeMode = themeMode === "auto" ? "light" : themeMode === "light" ? "dark" : "auto";
+    writeLS(THEME_KEY, themeMode);
+    applyTheme(themeMode);
+    render();
+  });
+
+  /* ---------- countdown ---------- */
+  var FIRST_ROUND = Date.UTC(2026, 9, 4, 15, 0, 0); // 04/10/2026 ~12h BRT
+  function tick(){
+    var now = Date.now();
+    var diff = FIRST_ROUND - now;
+    var el = $("count");
+    if(diff <= 0){ el.innerHTML = "<b>1&ordm; turno</b> em curso ou concluído"; return; }
+    var d = Math.floor(diff / 86400000);
+    var h = Math.floor((diff % 86400000) / 3600000);
+    el.innerHTML = "1&ordm; turno em <b>" + d + " dias</b> " + h + "h";
+  }
+  tick(); setInterval(tick, 60000);
+
+  /* ---------- math ---------- */
+  function normCdf(x){
+    var b1=0.319381530,b2=-0.356563782,b3=1.781477937,b4=-1.821255978,b5=1.330274429,p=0.2316419,c=0.39894228;
+    var ax = Math.abs(x);
+    var k = 1/(1+p*ax);
+    var w = c*Math.exp(-ax*ax/2)*k*(b1+k*(b2+k*(b3+k*(b4+k*b5))));
+    return x >= 0 ? 1-w : w;
+  }
+  function bsCall(S,K,r,v,t){
+    if(t<=0) return Math.max(S-K,0);
+    var d1=(Math.log(S/K)+(r+v*v/2)*t)/(v*Math.sqrt(t));
+    var d2=d1-v*Math.sqrt(t);
+    return S*normCdf(d1)-K*Math.exp(-r*t)*normCdf(d2);
+  }
+  function bsPut(S,K,r,v,t){
+    if(t<=0) return Math.max(K-S,0);
+    var d1=(Math.log(S/K)+(r+v*v/2)*t)/(v*Math.sqrt(t));
+    var d2=d1-v*Math.sqrt(t);
+    return K*Math.exp(-r*t)*normCdf(-d2)-S*normCdf(-d1);
+  }
+
+  /* ---------- tickers ---------- */
+  var TICKERS = {
+    IBOV:  {spot:168000, iv:26, mult:1,   dec:0, sens:"—",           drv:"Cesta das blue chips + fluxo estrangeiro"},
+    PETR4: {spot:38.0,   iv:40, mult:100, dec:2, sens:"Alta",        drv:"Politica de precos · dividendos · indicacoes"},
+    BBAS3: {spot:27.0,   iv:34, mult:100, dec:2, sens:"Alta",        drv:"Banco estatal · credito direcionado · payout"},
+    ITUB4: {spot:37.0,   iv:26, mult:100, dec:2, sens:"Media-baixa", drv:"Ciclo de juros (COPOM) · credito"},
+    BBDC4: {spot:16.0,   iv:30, mult:100, dec:2, sens:"Media",       drv:"Ciclo de juros · inadimplencia"}
+  };
+
+  var st = {
+    ticker:"PETR4", spot:38.0, iv:40, rate:15, days:81,
+    inner:6, outer:13, legs:4, mode:"bs", debit:null, mult:100, dec:2
+  };
+
+  /* ---------- inputs ---------- */
+  function setTicker(t){
+    st.ticker = t;
+    var d = TICKERS[t];
+    st.spot = d.spot; st.iv = d.iv; st.mult = d.mult; st.dec = d.dec;
+    $("spot").value = d.spot;
+    $("iv").value = d.iv;
+    $("tickhint").textContent = d.drv + "  ·  lote " + d.mult;
+    Array.prototype.forEach.call(document.querySelectorAll("#tickrow button"), function(b){
+      b.setAttribute("aria-pressed", b.dataset.t === t ? "true" : "false");
+    });
+    render();
+    seedProb();
+  }
+  function seedProb(){
+    var k = strikes();
+    $("pspot").value = fmt(st.spot, st.dec);
+    $("piv").value = st.iv;
+    $("pdays").value = st.days;
+    $("prate").value = st.rate;
+    $("plow").value = fmt(k.K2, st.dec);
+    $("phigh").value = fmt(k.K3, st.dec);
+    probRender();
+  }
+  document.querySelectorAll("#tickrow button").forEach(function(b){
+    b.addEventListener("click", function(){ setTicker(b.dataset.t); });
+  });
+  function bindNum(id, key){
+    $(id).addEventListener("input", function(){
+      var v = parseFloat($(id).value);
+      if(!isNaN(v)){ st[key] = v; render(); }
+    });
+  }
+  bindNum("spot","spot"); bindNum("iv","iv"); bindNum("days","days");
+  bindNum("rate","rate"); bindNum("inner","inner"); bindNum("outer","outer");
+  $("debit").addEventListener("input", function(){
+    var v = parseFloat($("debit").value);
+    st.debit = isNaN(v) ? null : v; render();
+  });
+  document.querySelectorAll("#legseg button").forEach(function(b){
+    b.addEventListener("click", function(){
+      st.legs = parseInt(b.dataset.legs,10);
+      document.querySelectorAll("#legseg button").forEach(function(x){
+        x.setAttribute("aria-pressed", x===b ? "true":"false");
+      });
+      render();
+    });
+  });
+  document.querySelectorAll("#modeseg button").forEach(function(b){
+    b.addEventListener("click", function(){
+      st.mode = b.dataset.mode;
+      document.querySelectorAll("#modeseg button").forEach(function(x){
+        x.setAttribute("aria-pressed", x===b ? "true":"false");
+      });
+      $("manualwrap").hidden = st.mode !== "manual";
+      render();
+    });
+  });
+
+  /* ---------- core calc ---------- */
+  function strikes(){
+    return {
+      K1: st.spot*(1 - st.outer/100),
+      K2: st.spot*(1 - st.inner/100),
+      K3: st.spot*(1 + st.inner/100),
+      K4: st.spot*(1 + st.outer/100)
+    };
+  }
+  function priceBS(iv, days){
+    var k = strikes();
+    var t = days/365, r = st.rate/100, v = iv/100;
+    var d = bsPut(st.spot,k.K2,r,v,t) + bsCall(st.spot,k.K3,r,v,t);
+    if(st.legs === 4){ d -= bsPut(st.spot,k.K1,r,v,t) + bsCall(st.spot,k.K4,r,v,t); }
+    return d;
+  }
+  function netDebit(){
+    if(st.mode === "manual" && st.debit != null) return st.debit;
+    return priceBS(st.iv, st.days);
+  }
+  function payoff(S, nd){
+    var k = strikes();
+    var v = Math.max(k.K2 - S, 0) + Math.max(S - k.K3, 0);
+    if(st.legs === 4){ v -= Math.max(k.K1 - S, 0) + Math.max(S - k.K4, 0); }
+    return v - nd;
+  }
+
+  /* ---------- formatting ---------- */
+  function fmt(n, dec){
+    if(dec == null) dec = st.dec;
+    return n.toLocaleString("pt-BR", {minimumFractionDigits:dec, maximumFractionDigits:dec});
+  }
+  function fmtBRL(n){
+    var abs = Math.abs(n);
+    var dec = abs >= 1000 ? 0 : 2;
+    return (n<0?"−":"") + "R$ " + abs.toLocaleString("pt-BR",{minimumFractionDigits:dec,maximumFractionDigits:dec});
+  }
+  function css(name){ return getComputedStyle(document.documentElement).getPropertyValue(name).trim(); }
+
+  /* ---------- render ---------- */
+  var firstDraw = true;
+  function render(){
+    var k = strikes();
+    var nd = netDebit();
+    var mult = st.mult;
+
+    /* chart */
+    var C = { w:860, h:440, l:64, r:16, t:20, b:34 };
+    var Smin = st.spot*0.68, Smax = st.spot*1.32;
+    var N = 240;
+    var xs = [], ys = [];
+    var yMin = Infinity, yMax = -Infinity;
+    for(var i=0;i<=N;i++){
+      var S = Smin + (Smax-Smin)*i/N;
+      var y = payoff(S, nd) * mult;
+      xs.push(S); ys.push(y);
+      if(y<yMin) yMin=y; if(y>yMax) yMax=y;
+    }
+    var pad = (yMax - yMin) * 0.08 || 1;
+    yMin -= pad; yMax += pad;
+    if(yMin > 0) yMin = -pad;
+    if(yMax < 0) yMax = pad;
+
+    var px = function(S){ return C.l + (S - Smin)/(Smax - Smin) * (C.w - C.l - C.r); };
+    var py = function(v){ return C.t + (yMax - v)/(yMax - yMin) * (C.h - C.t - C.b); };
+    var zeroY = py(0);
+
+    var inkGrid = css("--chart-grid"), inkAxis = css("--chart-axis"),
+        ink = css("--ink"), ink3 = css("--ink-3"),
+        prof = css("--profit"), loss = css("--loss"), acc = css("--accent"),
+        up = css("--up"), down = css("--down");
+
+    var g = "";
+    /* grid + y labels */
+    var steps = 5;
+    for(var s=0;s<=steps;s++){
+      var val = yMin + (yMax - yMin)*s/steps;
+      var yy = py(val);
+      g += '<line x1="'+C.l+'" y1="'+yy.toFixed(1)+'" x2="'+(C.w-C.r)+'" y2="'+yy.toFixed(1)+'" stroke="'+inkGrid+'" stroke-width="1"/>';
+      g += '<text x="'+(C.l-8)+'" y="'+(yy+3.5).toFixed(1)+'" text-anchor="end" font-size="10">'+fmtBRL(val)+'</text>';
+    }
+    /* zero line */
+    g += '<line x1="'+C.l+'" y1="'+zeroY.toFixed(1)+'" x2="'+(C.w-C.r)+'" y2="'+zeroY.toFixed(1)+'" stroke="'+inkAxis+'" stroke-width="1.5"/>';
+
+    /* profit / loss fills */
+    var profPath = "M " + px(xs[0]).toFixed(1) + " " + zeroY.toFixed(1);
+    var lossPath = "M " + px(xs[0]).toFixed(1) + " " + zeroY.toFixed(1);
+    for(var j=0;j<=N;j++){
+      var X = px(xs[j]);
+      var Yv = py(ys[j]);
+      profPath += " L " + X.toFixed(1) + " " + Math.min(Yv, zeroY).toFixed(1);
+      lossPath += " L " + X.toFixed(1) + " " + Math.max(Yv, zeroY).toFixed(1);
+    }
+    profPath += " L " + px(xs[N]).toFixed(1) + " " + zeroY.toFixed(1) + " Z";
+    lossPath += " L " + px(xs[N]).toFixed(1) + " " + zeroY.toFixed(1) + " Z";
+    g += '<path d="'+profPath+'" fill="'+prof+'" fill-opacity="0.14"/>';
+    g += '<path d="'+lossPath+'" fill="'+loss+'" fill-opacity="0.12"/>';
+
+    /* strike verticals */
+    var marks = [
+      {S:k.K1, lab:"P−", show: st.legs===4, col:down},
+      {S:k.K2, lab:"P",  show:true, col:down},
+      {S:k.K3, lab:"C",  show:true, col:up},
+      {S:k.K4, lab:"C+", show: st.legs===4, col:up}
+    ];
+    marks.forEach(function(m){
+      if(!m.show) return;
+      var X = px(m.S);
+      g += '<line x1="'+X.toFixed(1)+'" y1="'+C.t+'" x2="'+X.toFixed(1)+'" y2="'+(C.h-C.b)+'" stroke="'+m.col+'" stroke-width="1" stroke-dasharray="3 3" opacity="0.55"/>';
+      g += '<text x="'+X.toFixed(1)+'" y="'+(C.h-C.b+13)+'" text-anchor="middle" font-size="10" fill="'+m.col+'">'+m.lab+'</text>';
+    });
+
+    /* payoff line */
+    var line = "";
+    for(var p=0;p<=N;p++){
+      line += (p===0?"M ":"L ") + px(xs[p]).toFixed(1) + " " + py(ys[p]).toFixed(1) + " ";
+    }
+    g += '<path class="draw" d="'+line+'" fill="none" stroke="'+ink+'" stroke-width="2.5" stroke-linejoin="round"/>';
+
+    /* breakevens */
+    var bes = [];
+    for(var b2=1;b2<=N;b2++){
+      if((ys[b2-1] < 0) !== (ys[b2] < 0)){
+        var frac = Math.abs(ys[b2-1]) / (Math.abs(ys[b2-1]) + Math.abs(ys[b2]));
+        var Sbe = xs[b2-1] + (xs[b2]-xs[b2-1])*frac;
+        bes.push(Sbe);
+      }
+    }
+    bes.forEach(function(Sbe){
+      var X = px(Sbe);
+      g += '<circle cx="'+X.toFixed(1)+'" cy="'+zeroY.toFixed(1)+'" r="3.5" fill="'+acc+'"/>';
+      g += '<text x="'+X.toFixed(1)+'" y="'+(zeroY-8).toFixed(1)+'" text-anchor="middle" font-size="9.5" fill="'+acc+'">'+fmt(Sbe)+'</text>';
+    });
+
+    /* spot marker */
+    var Xs = px(st.spot);
+    g += '<line x1="'+Xs.toFixed(1)+'" y1="'+C.t+'" x2="'+Xs.toFixed(1)+'" y2="'+(C.h-C.b)+'" stroke="'+acc+'" stroke-width="1.5"/>';
+    g += '<circle cx="'+Xs.toFixed(1)+'" cy="'+py(payoff(st.spot,nd)*mult).toFixed(1)+'" r="3.5" fill="'+acc+'"/>';
+    g += '<text x="'+Xs.toFixed(1)+'" y="'+(C.t-6)+'" text-anchor="middle" font-size="10" fill="'+acc+'">spot '+fmt(st.spot)+'</text>';
+
+    $("chart").innerHTML = g;
+
+    if(firstDraw && !window.matchMedia("(prefers-reduced-motion: reduce)").matches){
+      var path = $("chart").querySelector(".draw");
+      if(path){
+        var len = path.getTotalLength();
+        path.style.strokeDasharray = len;
+        path.style.strokeDashoffset = len;
+        path.getBoundingClientRect();
+        path.style.transition = "stroke-dashoffset 900ms ease";
+        path.style.strokeDashoffset = "0";
+      }
+      firstDraw = false;
+    }
+
+    /* legend */
+    $("legend").innerHTML =
+      '<span style="color:'+down+'"><i></i>P '+fmt(k.K2)+(st.legs===4?' · P− '+fmt(k.K1):'')+'</span>' +
+      '<span style="color:'+up+'"><i></i>C '+fmt(k.K3)+(st.legs===4?' · C+ '+fmt(k.K4):'')+'</span>' +
+      '<span class="k">área verde = lucro · área rosa = prejuízo · pontos = empate</span>';
+
+    /* metrics */
+    var maxLoss = nd * mult;
+    var beLow = bes.length ? Math.min.apply(null,bes) : null;
+    var beHigh = bes.length ? Math.max.apply(null,bes) : null;
+    var m = "";
+    m += metric("Débito líquido", fmtBRL(nd*mult), "por lote ("+mult+"×)", "");
+    m += metric("Perda máxima", "−"+fmtBRL(maxLoss), "entre "+fmt(k.K2)+" e "+fmt(k.K3), "loss");
+    if(st.legs===4){
+      var gL = ((k.K2-k.K1) - nd)*mult, gU = ((k.K4-k.K3) - nd)*mult;
+      m += metric("Ganho máx. baixa", fmtBRL(gL), "abaixo de "+fmt(k.K1), gL>=0?"profit":"loss");
+      m += metric("Ganho máx. alta", fmtBRL(gU), "acima de "+fmt(k.K4), gU>=0?"profit":"loss");
+    } else {
+      m += metric("Ganho máximo", "ilimitado", "V comprado", "profit");
+    }
+    m += metric("Empate baixa", beLow!=null?fmt(beLow):"—", beLow!=null?"−"+((1-beLow/st.spot)*100).toFixed(1)+"%":"", "");
+    m += metric("Empate alta", beHigh!=null?fmt(beHigh):"—", beHigh!=null?"+"+((beHigh/st.spot-1)*100).toFixed(1)+"%":"", "");
+    $("metrics").innerHTML = m;
+
+    /* greeks (numeric vega & theta via finite diff) */
+    var vega = (priceBS(st.iv+1, st.days) - priceBS(st.iv-1, st.days))/2 * mult;
+    var theta = (priceBS(st.iv, st.days-1) - priceBS(st.iv, st.days)) * mult;
+    $("greeks").innerHTML =
+      greek("Vega", (vega>=0?"+":"−")+fmtBRL(Math.abs(vega))+"/pp", vega>=0) +
+      greek("Gama", "+ (perto do spot)", true) +
+      greek("Theta", (theta>=0?"+":"−")+fmtBRL(Math.abs(theta))+"/dia", theta>=0) +
+      greek("Rho", "≈ 0 / baixo", true);
+
+    /* note */
+    var elevated = st.iv >= (TICKERS[st.ticker].iv + 6);
+    $("wbnote").innerHTML = st.legs===2
+      ? "<strong>Strangle simples.</strong> Risco = 100% do débito, theta corrói todo dia (ch.&nbsp;10). Use stop de tempo curto e prazo que englobe os dois turnos."
+      : ("<strong>Risco definido.</strong> Perda travada no débito; teto no ganho pelas asas. "
+         + (elevated
+             ? "IV bem acima da histórica do ativo → considere trocar por <em>calendar</em> (vender outubro, comprar novembro), mais vega e menos theta (ch.&nbsp;9)."
+             : "IV perto da histórica → o strangle comprado faz sentido; reavalie se a IV inflar antes de montar."));
+  }
+
+  function metric(lbl, val, sub, cls){
+    return '<div class="metric"><div class="lbl">'+lbl+'</div>' +
+           '<div class="val '+(cls||"")+'">'+val+'</div>' +
+           '<div class="sub">'+(sub||"")+'</div></div>';
+  }
+  function greek(name, s, pos){
+    return '<div class="g"><div class="name">'+name+'</div>' +
+           '<div class="s '+(pos?"pos":"neg")+'">'+s+'</div>' +
+           '<div class="bar '+(pos?"pos":"neg")+'"></div></div>';
+  }
+
+  /* ---------- probability tool ---------- */
+  function parseBR(v){
+    if(typeof v !== "string") return parseFloat(v);
+    return parseFloat(v.replace(/\./g,"").replace(",","."));
+  }
+  function probRender(){
+    var S = parseBR($("pspot").value);
+    var iv = parseFloat($("piv").value)/100;
+    var days = parseFloat($("pdays").value);
+    var r = parseFloat($("prate").value)/100;
+    var lo = parseBR($("plow").value);
+    var hi = parseBR($("phigh").value);
+    if([S,iv,days,r,lo,hi].some(function(x){ return isNaN(x); }) || S<=0 || days<=0 || iv<=0){
+      $("pin").textContent = "—"; $("pout").textContent = "—";
+      $("probnote").textContent = "Preencha todos os campos.";
+      return;
+    }
+    var t = days/365;
+    function pBelow(F){
+      var d = (Math.log(F/S) - (r - iv*iv/2)*t) / (iv*Math.sqrt(t));
+      return normCdf(d);
+    }
+    var pLo = pBelow(lo), pHi = pBelow(hi);
+    var inside = Math.max(0, pHi - pLo);
+    var outside = 1 - inside;
+    $("pin").textContent = (inside*100).toFixed(0) + "%";
+    $("pout").textContent = (outside*100).toFixed(0) + "%";
+    var oneSig = S * iv * Math.sqrt(t);
+    $("probnote").innerHTML =
+      "Movimento de 1 desvio ≈ <strong>±" + oneSig.toLocaleString("pt-BR",{maximumFractionDigits: S>=1000?0:2}) +
+      "</strong> (±" + ((oneSig/S)*100).toFixed(1) + "%) até o vencimento. " +
+      "Held-to-expiry, a operação precisa de <strong>" + (outside*100).toFixed(0) + "%</strong> — "
+      + (outside < 0.45
+          ? "faixa central provável demais: aperte os strikes comprados ou conte com a alta de vol no caminho."
+          : "os strikes já dão uma chance decente de escapar da faixa.");
+  }
+  ["pspot","piv","pdays","prate","plow","phigh"].forEach(function(id){
+    $(id).addEventListener("input", probRender);
+  });
+  $("pullwb").addEventListener("click", seedProb);
+
+  /* ---------- checklist ---------- */
+  var CL_KEY = "vol2026-checklist";
+  var CHECKS = [
+    {g:"Estratégia (ch. 11.21)", items:[
+      ["tese","<b>Tese escrita:</b> evento binário + transmissão fiscal → movimento forte em qualquer direção ou alta da vol implícita."],
+      ["perda","<b>Perda máxima ≤ 1–1,5% do patrimônio</b> da conta. Definida em R$ e nunca aumentada."],
+      ["lucro","<b>Lucro máximo</b> calculado com a cadeia real (largura da asa − débito líquido)."],
+      ["entrada","<b>Entrada escalonada:</b> 1/3 agora · 1/3 ~10 pregões antes do 1º turno · 1/3 só se a IV não inflou (senão, calendar)."],
+      ["saida","<b>Saída no lucro:</b> realizar 50–75% se o prêmio dobrar, ou no gap de segunda 05/10. Não segurar as 4 pernas até o vencimento."],
+      ["stop","<b>Stop de tempo:</b> ~10 pregões antes do venc., se perdendo e dentro da faixa, desmontar. Tolerância 15–20% do capital da operação."],
+      ["rolagem","<b>Regra de rolagem (ch. 6.7):</b> se o ativo andar &gt;4–5% antes do evento, reancorar o strangle em torno do novo spot."],
+      ["somazero","<b>Lembrete:</b> é soma zero. Vender as asas = alguém compra cauda de mim. Não há borda garantida, só risco definido."]
+    ]},
+    {g:"Antes de enviar a ordem", items:[
+      ["serie","Série escolhida cobre <b>1º e 2º turno</b> (vencimento de novembro, não outubro)."],
+      ["ivhist","<b>Ibovespa VIX / IV da série</b> anotada vs. IV histórica → decide strangle comprado vs. calendar."],
+      ["faixa","<b>Faixa de empate</b> recalculada com os prêmios reais da tela."],
+      ["teto","<b>Perda máxima ≤ o teto de capital</b> definido acima."],
+      ["custo","<b>Corretagem das 4 pernas &lt; 15–20% do prêmio líquido</b> (ch. 11.20). Se não passar, usar strangle de 2 pernas."],
+      ["liq","<b>Liquidez conferida:</b> spread de compra/venda aceitável nas 4 séries (PETR4 / bancos / IBOV)."]
+    ]}
+  ];
+  var clState = {};
+  try{ clState = JSON.parse(readLS(CL_KEY) || "{}") || {}; }catch(e){ clState = {}; }
+
+  function renderChecklist(){
+    var host = $("checklist");
+    host.innerHTML = "";
+    var total = 0, done = 0;
+    CHECKS.forEach(function(grp){
+      var wrap = document.createElement("div");
+      wrap.className = "clgroup";
+      var eb = document.createElement("span");
+      eb.className = "eyebrow";
+      eb.textContent = grp.g;
+      wrap.appendChild(eb);
+      grp.items.forEach(function(it){
+        total++;
+        var id = it[0], txt = it[1];
+        var checked = !!clState[id];
+        if(checked) done++;
+        var row = document.createElement("div");
+        row.className = "cli" + (checked ? " done" : "");
+        var cb = document.createElement("input");
+        cb.type = "checkbox"; cb.id = "cl-" + id; cb.checked = checked;
+        cb.addEventListener("change", function(){
+          clState[id] = cb.checked;
+          writeLS(CL_KEY, JSON.stringify(clState));
+          renderChecklist();
+        });
+        var lb = document.createElement("label");
+        lb.setAttribute("for", "cl-" + id);
+        lb.innerHTML = txt;
+        row.appendChild(cb); row.appendChild(lb);
+        wrap.appendChild(row);
+      });
+      host.appendChild(wrap);
+    });
+    $("progbar").style.width = (total ? (done/total*100) : 0) + "%";
+  }
+  $("clreset").addEventListener("click", function(){
+    clState = {}; writeLS(CL_KEY, "{}"); renderChecklist();
+  });
+  renderChecklist();
+
+  /* ---------- optimal buy window ---------- */
+  var OPT_EVENTS = {
+    political: { label:"1º turno (04/10)",          date:new Date(2026,9,4) },
+    copom:     { label:"COPOM — decisão (17/09)",   date:new Date(2026,8,17) }
+  };
+  var OPT_MAP = { IBOV:"political", PETR4:"political", BBAS3:"political", ITUB4:"copom", BBDC4:"copom" };
+  var EXPIRY = new Date(2026,10,20); // ~3ª sexta de novembro
+  var opt = { ticker:"PETR4", lead:18 };
+
+  function addBiz(date, n){
+    var d = new Date(date.getTime()), step = n>=0?1:-1, left = Math.abs(n);
+    while(left>0){ d.setDate(d.getDate()+step); var w=d.getDay(); if(w!==0 && w!==6) left--; }
+    return d;
+  }
+  function bizDiff(a, b){
+    var sign = b>=a ? 1 : -1;
+    var lo = sign>0 ? a : b, hi = sign>0 ? b : a, n = 0, d = new Date(lo.getTime());
+    while(d < hi){ d.setDate(d.getDate()+1); var w=d.getDay(); if(w!==0 && w!==6) n++; }
+    return sign*n;
+  }
+  function midweek(date){
+    var d = new Date(date.getTime()), w = d.getDay();
+    if(w===1) d.setDate(d.getDate()+1);
+    else if(w===5) d.setDate(d.getDate()-1);
+    else if(w===6) d.setDate(d.getDate()+3);
+    else if(w===0) d.setDate(d.getDate()+2);
+    return d;
+  }
+  function fmtBR(d){ return d.toLocaleDateString("pt-BR",{day:"2-digit",month:"2-digit",year:"numeric"}); }
+  function wdName(d){ return ["domingo","segunda-feira","terça-feira","quarta-feira","quinta-feira","sexta-feira","sábado"][d.getDay()]; }
+  function optm(kk, vv, ss){
+    return '<div class="m"><div class="k">'+kk+'</div><div class="v">'+vv+'</div><div class="s">'+ss+'</div></div>';
+  }
+
+  function drawOptBar(now, wStart, wEnd, E, thetaZone, expiry, sug){
+    var W=860, L=10, R=10, T=22;
+    var t0 = addBiz(wStart, -8).getTime();
+    var t1 = expiry.getTime();
+    function x(dt){
+      var v = (dt.getTime()-t0)/(t1-t0);
+      v = Math.max(0, Math.min(1, v));
+      return L + v*(W-L-R);
+    }
+    var grid = css("--chart-grid"), prof = css("--profit"), warn = css("--warn"),
+        loss = css("--loss"), acc = css("--accent"), ink2 = css("--ink-2"), ink3 = css("--ink-3"), surf = css("--surface");
+    var y = T+14, g = "";
+    g += '<line x1="'+L+'" y1="'+y+'" x2="'+(W-R)+'" y2="'+y+'" stroke="'+grid+'" stroke-width="6" stroke-linecap="round"/>';
+    g += '<line x1="'+x(wStart).toFixed(1)+'" y1="'+y+'" x2="'+x(wEnd).toFixed(1)+'" y2="'+y+'" stroke="'+prof+'" stroke-width="6" stroke-linecap="round"/>';
+    g += '<line x1="'+x(wEnd).toFixed(1)+'" y1="'+y+'" x2="'+x(E).toFixed(1)+'" y2="'+y+'" stroke="'+warn+'" stroke-width="6" stroke-linecap="round"/>';
+    g += '<line x1="'+x(thetaZone).toFixed(1)+'" y1="'+y+'" x2="'+x(expiry).toFixed(1)+'" y2="'+y+'" stroke="'+loss+'" stroke-width="6" stroke-linecap="round"/>';
+    function mark(dt, label, col){
+      var X = x(dt);
+      g += '<line x1="'+X.toFixed(1)+'" y1="'+T+'" x2="'+X.toFixed(1)+'" y2="'+(T+22)+'" stroke="'+col+'" stroke-width="1.5"/>';
+      g += '<text x="'+X.toFixed(1)+'" y="'+(T+34)+'" text-anchor="middle" font-size="9.5" fill="'+col+'">'+label+'</text>';
+    }
+    mark(E, "evento", ink2);
+    mark(expiry, "venc.", ink3);
+    var sx = x(sug);
+    g += '<path d="M '+sx.toFixed(1)+' '+(T+4)+' l -4 -6 l 8 0 z" fill="'+prof+'"/>';
+    var nx = x(now);
+    g += '<circle cx="'+nx.toFixed(1)+'" cy="'+y+'" r="5" fill="'+acc+'" stroke="'+surf+'" stroke-width="2"/>';
+    g += '<text x="'+nx.toFixed(1)+'" y="'+(T-6)+'" text-anchor="middle" font-size="10" fill="'+acc+'">hoje</text>';
+    $("optbar").innerHTML = g;
+  }
+
+  function renderOpt(){
+    var ev = OPT_EVENTS[OPT_MAP[opt.ticker]];
+    var E = ev.date, now = new Date();
+    var wStart = addBiz(E, -(opt.lead+6));
+    var wEnd   = addBiz(E, -Math.max(opt.lead-6, 3));
+    var sug    = midweek(addBiz(E, -opt.lead));
+    var thetaZone = addBiz(EXPIRY, -10);
+
+    var el = $("optstatus"), cls, msg;
+    if(now > E){
+      cls = "past";
+      msg = "Pós-evento — a volatilidade desinfla e a vega vira contra. Não é hora de comprar volatilidade nesse ativo.";
+    } else if(now >= wStart && now <= wEnd){
+      cls = "open";
+      msg = "JANELA ABERTA — faixa ideal para comprar agora.";
+    } else if(now < wStart){
+      var dd = bizDiff(now, wStart);
+      cls = "soon";
+      msg = "Ainda cedo — a janela abre em ~" + dd + " pregão" + (dd===1?"":"s") + " (" + fmtBR(wStart) + ").";
+    } else {
+      cls = "late";
+      msg = "Tarde — dá para entrar, mas o theta já pesa. Reduza o tamanho ou troque por um calendar.";
+    }
+    el.className = "status " + cls;
+    el.textContent = msg;
+
+    $("optrows").innerHTML =
+      optm("Ativo", opt.ticker, "reage a: " + (OPT_MAP[opt.ticker]==="political" ? "eleição" : "juros / COPOM")) +
+      optm("Catalisador", ev.label, "quando o preço pula") +
+      optm("Janela ideal", fmtBR(wStart) + " – " + fmtBR(wEnd), "faixa de compra") +
+      optm("Dia sugerido", fmtBR(sug), wdName(sug)) +
+      optm("Antecedência", opt.lead + " pregões", "antes do catalisador") +
+      optm("Theta pesa", "a partir de " + fmtBR(thetaZone), "últimos 10 pregões");
+
+    $("optlead").value = opt.lead;
+    $("optleadval").textContent = opt.lead + " pregões antes do catalisador";
+    drawOptBar(now, wStart, wEnd, E, thetaZone, EXPIRY, sug);
+  }
+
+  document.querySelectorAll("#opttickrow button").forEach(function(b){
+    b.addEventListener("click", function(){
+      opt.ticker = b.dataset.t;
+      document.querySelectorAll("#opttickrow button").forEach(function(x){
+        x.setAttribute("aria-pressed", x===b ? "true" : "false");
+      });
+      renderOpt();
+    });
+  });
+  $("optlead").addEventListener("input", function(){
+    var v = parseInt($("optlead").value, 10);
+    if(!isNaN(v)){ opt.lead = v; renderOpt(); }
+  });
+
+  /* ---------- glossary filter ---------- */
+  $("glossfilter").addEventListener("input", function(){
+    var q = $("glossfilter").value.toLowerCase().trim();
+    var shown = 0;
+    document.querySelectorAll("#terms .term").forEach(function(el){
+      var hit = !q || el.textContent.toLowerCase().indexOf(q) !== -1;
+      el.classList.toggle("hide", !hit);
+      if(hit) shown++;
+    });
+    $("glossnone").hidden = shown !== 0;
+  });
+
+  /* ---------- boot ---------- */
+  $("days").value = st.days;
+  $("rate").value = st.rate;
+  $("inner").value = st.inner;
+  $("outer").value = st.outer;
+  document.querySelector('#legseg button[data-legs="4"]').setAttribute("aria-pressed","true");
+  document.querySelector('#modeseg button[data-mode="bs"]').setAttribute("aria-pressed","true");
+  setTicker("PETR4");
+
+  $("optlead").value = opt.lead;
+  document.querySelector('#opttickrow button[data-t="PETR4"]').setAttribute("aria-pressed","true");
+  renderOpt();
+  setInterval(renderOpt, 3600000);
+
+  /* ---------- live data (GitHub Pages only; blocked/ignored on claude.ai) ---------- */
+  (function loadLiveData(){
+    if(typeof fetch !== "function") return;
+    fetch("data.json", { cache:"no-store" })
+      .then(function(r){ return r.ok ? r.json() : null; })
+      .then(function(d){
+        if(!d) return;
+        if(d.tickers){
+          Object.keys(d.tickers).forEach(function(k){
+            if(!TICKERS[k]) return;
+            var v = d.tickers[k];
+            if(v.spot != null && !isNaN(v.spot)) TICKERS[k].spot = v.spot;
+            if(v.iv   != null && !isNaN(v.iv))   TICKERS[k].iv   = v.iv;
+          });
+        }
+        if(d.updated){
+          var s = $("datastamp");
+          if(s){ s.textContent = "dados: " + d.updated; s.hidden = false; }
+        }
+        if(d.chips && d.chips.ibov){
+          var c = document.querySelector('[data-chip="ibov"] b');
+          if(c) c.textContent = d.chips.ibov;
+        }
+        setTicker(st.ticker);   // re-render workbench + probability with fresh numbers
+      })
+      .catch(function(){ /* offline / sandboxed: keep baked-in values */ });
+  })();
+})();
+</script>

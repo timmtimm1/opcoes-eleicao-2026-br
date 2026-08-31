@@ -1,0 +1,18 @@
+{
+  "updated": "2026-08-31 (seed)",
+  "source": "seed — valores ilustrativos ate a primeira execucao do GitHub Actions",
+  "chips": {
+    "ibov": "~168.000"
+  },
+  "tickers": {
+    "IBOV":  { "spot": 168000, "iv": 26 },
+    "PETR4": { "spot": 38.0,   "iv": 40 },
+    "BBAS3": { "spot": 27.0,   "iv": 34 },
+    "ITUB4": { "spot": 37.0,   "iv": 26 },
+    "BBDC4": { "spot": 16.0,   "iv": 30 }
+  },
+  "notes": {
+    "spot": "preco de fechamento (apos o pregao) ou ultimo negocio (antes da abertura), via Yahoo Finance / brapi.dev",
+    "iv": "estimativa — NAO e atualizada pelo GitHub Actions; ajustada manualmente ou pela rotina Claude semanal"
+  }
+}

@@ -1,0 +1,80 @@
+# Glossário — Investindo no Mercado de Opções
+
+Termos do Apêndice A do livro mais conceitos-chave dos capítulos. `(Ch N)` indica onde é melhor explicado.
+
+- **A seco / naked / "nua"** — compra ou venda de opção sem contra-medida de controle de risco (Ch 11).
+- **Andar de lado / acumular** — mercado estável, nem sobe nem desce (Ch 12).
+- **Arbitragem** — operação que explora diferença de preço para lucrar sem risco algum. Mercado eficiente não a oferece (Ch 7).
+- **Árvore binomial** — método numérico que estima a evolução do preço em passos e recua avaliando a opção nó a nó; avalia americanas e exóticas (Ch 8).
+- **Ativo subjacente** — bem ou direito objeto de um derivativo (Ch 2).
+- **ATM (at the money)** — spot ≈ strike; maior valor extrínseco e maior prêmio da série (Ch 2).
+- **Beta (β)** — co-variância do ativo com o mercado (IBOVESPA); medida de risco não-diversificável no CAPM (Ch 5).
+- **Bear / Bull** — mercado com tendência a descer / subir; classifica spreads pela visão de mercado (Ch 11).
+- **Black-Scholes** — modelo de fórmulas fechadas (1973) para o "valor justo" de opções europeias (Ch 9).
+- **Boi (call ratio backspread)** — vender X calls S1 + comprar Y>X calls S2; aposta em alta explosiva (Ch 11).
+- **Breakeven / spot de empate** — spot no qual a operação passa de lucro a prejuízo (Ch 11).
+- **BXM (BuyWrite Index)** — índice de Chicago de uma carteira teórica de venda coberta de call (Ch 11).
+- **Calendar spread** — spread entre opções de vencimentos diferentes; usado para rolar operações (Ch 11).
+- **Call** — opção de compra (Ch 2).
+- **Capital protegido (synthetic long call)** — comprar ação + comprar put; a put é o seguro (Ch 11).
+- **Capitalização contínua** — juro efetivo no limite de infinitas capitalizações = e^(taxa nominal); padrão nas fórmulas de opções (Ch 4).
+- **CAPM** — modelo que relaciona risco (beta) e retorno para achar a taxa de juros de avaliação; `r = i + β·m` (Ch 5).
+- **Carteira replicante** — carteira de empréstimo + ações que paga o mesmo que a opção; origem do delta (Ch 3).
+- **Chamada de margem** — solicitação de garantia adicional quando o mercado se move desfavoravelmente (Ch 2).
+- **Commodity** — ativo fungível negociado em bolsa (ouro, soja, açúcar) (Ch 2).
+- **Credit spread** — spread com recebimento líquido de prêmio na montagem (Ch 11).
+- **Debit spread** — spread com desembolso líquido de prêmio na montagem (Ch 11).
+- **Delta (Δ)** — variação do prêmio para +$1 no spot; `N(d1)` (call), `N(d1)−1` (put); proporção da carteira replicante (Ch 10).
+- **Delta-neutra** — carteira cujos deltas se cancelam; não oscila nem lucra; alvo do market maker (Ch 10).
+- **Derivativo** — ativo cujo valor deriva de outro (o subjacente) (Ch 2).
+- **Desmontar** — desfazer a operação, convertendo lucro/prejuízo em dinheiro e cessando a exposição (Ch 12).
+- **DITM (deep in the money)** — opção com valor intrínseco especialmente grande; menor theta relativo (Ch 2, Ch 11).
+- **Estilo** — europeu (exerce só no vencimento), americano (qualquer dia), bermudas, asiática, knock-out/barreira (Ch 2).
+- **Exercício** — ato de reivindicar o direito garantido pela opção (Ch 12).
+- **Fatality** — neo-grega sugerida pelo autor: theta como % do prêmio (Ch 10).
+- **Fungível** — ativo substituível por outro da mesma espécie sem prejuízo (dinheiro, ouro, ações) (Ch 12).
+- **Gama (Γ)** — variação esperada no delta para +$1 no spot; derivada segunda; máximo em ATM (Ch 10).
+- **ITM (in the money)** — opção com valor intrínseco > 0 (Ch 2).
+- **Lançamento** — venda de opção que não se possuía; cria título novo. Coberto (dá o subjacente em garantia) ou a descoberto (margem em dinheiro/outro ativo) (Ch 2).
+- **LEAPS** — opções de prazo muito longo (> 1 ano); incomuns no Brasil; theta ameno (Ch 10, Ch 11).
+- **Log-normal** — distribuição do preço futuro (log do preço segue normal); espalha para valores altos (Ch 6).
+- **Margem** — garantia depositada para lastrear operações com compromisso a terceiros (lançar opção): ~3× o prêmio em dinheiro, ~25× em ações (Ch 2).
+- **Market maker** — entidade contratada para dar liquidez comprando e vendendo um ativo; lucra no spread compra/venda (Ch 10, Ch 12).
+- **Martingale** — dobrar a aposta até vencer; proibido pelos limites máximos de aposta; a evitar ao reinvestir lucros (Ch 11).
+- **Mercado eficiente** — preços refletem todo o conhecimento dos participantes; erros só aleatórios, não arbitráveis (Ch 3, Ch 12).
+- **Moneyness** — relação strike/spot: ITM, ATM, OTM, DITM. Define o comportamento da opção (Ch 2).
+- **Montar (operação)** — comprar/lançar/vender a descoberto os títulos da operação; passa a haver exposição a risco (Ch 12).
+- **N(x)** — distribuição normal cumulativa; `NORM.DIST(x;0;1;1)` no Excel; sem fórmula fechada (Ch 6, Ch 9).
+- **OTM (out of the money)** — sem valor intrínseco, strike longe do spot; vira pó se nada mudar (Ch 2).
+- **Paridade put-call** — `C − P = S − K·e^(−rt)`; relação rígida entre call e put de mesmo strike/vencimento (Ch 7).
+- **POP BOVESPA** — capital protegido em que calls vendidas financiam as puts de proteção (Ch 11).
+- **Posição** — exposição ao mercado (comprada ou vendida); "zerada" = sem exposição (Ch 12).
+- **Prêmio** — preço da opção = valor intrínseco + valor extrínseco (Ch 2).
+- **Put** — opção de venda (Ch 2).
+- **Random walk** — preços completamente imprevisíveis (Ch 6).
+- **Ratio** — operação em que uma opção aparece em proporção maior que outra (2:1, 3:2, 3:1) (Ch 11).
+- **Realizar (lucro/prejuízo)** — converter posições em dinheiro vivo (Ch 12).
+- **Reversão** — o mesmo que call credit spread / trava de baixa (Ch 11).
+- **Rho (ρ)** — variação do prêmio para +1 ponto na taxa de juros; positivo para call, negativo para put (Ch 10).
+- **Risco diversificável / não-diversificável** — específico do ativo (cancelável em carteira, não remunerado) vs. sistêmico (afeta o mercado todo, remunerado pelo beta) (Ch 5).
+- **Rolar** — desfazer uma operação e montar outra de forma casada, adiando a realização (Ch 12).
+- **ROI / ROM** — retorno sobre investimento inicial / sobre margem depositada; % ao mês ou ao ano (Ch 11).
+- **SELIC** — taxa-base de juros da economia brasileira; a mais baixa; "taxa livre de risco" (Ch 4).
+- **Série** — conjunto de opções que vencem no mesmo dia e garantem o mesmo direito (ex.: PETRA) (Ch 2).
+- **Soma zero** — jogo em que o ganho de um é a perda de outro; total sempre zero. Mercado de opções é soma zero (Ch 1, Ch 11).
+- **Sorriso da volatilidade** — curva em U das volatilidades implícitas por strike; ATM "barata", ITM/OTM "caras" (Ch 9).
+- **Spot** — preço corrente do ativo subjacente (Ch 2).
+- **Spread compra/venda** — diferença entre preço de compra e de venda do mesmo ativo (Ch 12).
+- **Spread (opções)** — (1) diferença de strikes; (2) diferença de prêmios; (3) família de operações comprar-uma/vender-outra para lucrar com a diferença de prêmio (Ch 11).
+- **Strike** — preço de compra/venda garantido pela opção (Ch 2).
+- **Theta (Θ)** — efeito da passagem do tempo no prêmio; quase sempre negativo; a grega mais importante para o pequeno investidor (Ch 10).
+- **Trava de alta / trava de baixa** — call debit spread / call credit spread (Ch 11).
+- **Vaca (call ratio spread)** — comprar 1 call S1 + vender X calls S2 + comprar X−1 calls S3; aposta em faixa estreita (Ch 11).
+- **Valor extrínseco** — prêmio − valor intrínseco; preço da incerteza; ∝ √tempo; 100% do prêmio em opções sem valor intrínseco (Ch 2).
+- **Valor intrínseco** — valor da opção se exercida hoje; `max(spot−strike,0)` (call), `max(strike−spot,0)` (put); nunca negativo (Ch 2).
+- **Vega (ν)** — efeito de +1 ponto de volatilidade no prêmio; curva com a forma do gama (Ch 10).
+- **Venda a descoberto (sell short / shorting)** — vender ativo que não se possui para recomprar mais barato; exige tomar emprestado e pagar aluguel (Ch 12).
+- **Venda coberta** — possuir o subjacente (ou o strike em dinheiro, na put) e lançar a opção (Ch 11).
+- **Virar pó** — opção sem valor intrínseco no vencimento; o prêmio é perdido (Ch 12).
+- **Volatilidade** — desvio padrão dos rendimentos de um ativo, em % ao ano (formal). Histórica (calculada do passado) vs. implícita (a que faz o prêmio teórico bater com o mercado) (Ch 6, Ch 9).
+- **Write** — termo inglês para lançar opção (Ch 12).
