@@ -1,15 +1,30 @@
 {
-  "updated": "2026-08-31 (seed)",
-  "source": "seed — valores ilustrativos ate a primeira execucao do GitHub Actions",
+  "updated": "31/08/2026 12:31 BRT  (2026-08-31T15:31Z)",
+  "source": "Yahoo Finance / brapi.dev via GitHub Actions [yahoo]",
   "chips": {
-    "ibov": "~168.000"
+    "ibov": "~177.279"
   },
   "tickers": {
-    "IBOV":  { "spot": 168000, "iv": 26 },
-    "PETR4": { "spot": 38.0,   "iv": 40 },
-    "BBAS3": { "spot": 27.0,   "iv": 34 },
-    "ITUB4": { "spot": 37.0,   "iv": 26 },
-    "BBDC4": { "spot": 16.0,   "iv": 30 }
+    "IBOV": {
+      "spot": 177279.0,
+      "iv": 26
+    },
+    "PETR4": {
+      "spot": 44.38,
+      "iv": 40
+    },
+    "BBAS3": {
+      "spot": 20.62,
+      "iv": 34
+    },
+    "ITUB4": {
+      "spot": 39.41,
+      "iv": 26
+    },
+    "BBDC4": {
+      "spot": 17.23,
+      "iv": 30
+    }
   },
   "notes": {
     "spot": "preco de fechamento (apos o pregao) ou ultimo negocio (antes da abertura), via Yahoo Finance / brapi.dev",
