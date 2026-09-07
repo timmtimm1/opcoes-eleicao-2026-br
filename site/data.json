@@ -11,11 +11,11 @@
     },
     "PETR4": {
       "spot": 47.11,
-      "iv": 40
+      "iv": 42
     },
     "BBAS3": {
       "spot": 22.52,
-      "iv": 34
+      "iv": 36
     },
     "ITUB4": {
       "spot": 41.92,
@@ -29,5 +29,11 @@
   "notes": {
     "spot": "preco de fechamento (apos o pregao) ou ultimo negocio (antes da abertura), via Yahoo Finance / brapi.dev",
     "iv": "estimativa — NAO e atualizada pelo GitHub Actions; ajustada manualmente ou pela rotina Claude semanal"
+  },
+  "research": {
+    "asof": "07/09/2026",
+    "polymarket": "Lula ~63% de vencer a eleição (mercado 'Brazil Presidential Election'); 90% para vencer o 1º turno; Lula 96% e Flávio Bolsonaro 92% de chance de avançar ao 2º turno",
+    "polls": "1º turno (Quaest, 30/08–01/09): Lula 37% x Flávio Bolsonaro 30%. 2º turno, empate técnico: Datafolha (03/09) Lula 46% x Flávio 44%; PoderData/Aya (03/09) Flávio 45% x Lula 44%",
+    "ibov_vix": "sem print público específico da semana — fontes B3/mídia relatam índice acima de 20 pontos (faixa 'alta') em 2026 por risco político, sem número exato desta semana"
   }
 }
