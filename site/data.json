@@ -11,11 +11,11 @@
     },
     "PETR4": {
       "spot": 49.0,
-      "iv": 42
+      "iv": 44
     },
     "BBAS3": {
       "spot": 22.49,
-      "iv": 36
+      "iv": 38
     },
     "ITUB4": {
       "spot": 42.73,
@@ -31,9 +31,9 @@
     "iv": "estimativa — NAO e atualizada pelo GitHub Actions; ajustada manualmente ou pela rotina Claude semanal"
   },
   "research": {
-    "asof": "07/09/2026",
-    "polymarket": "Lula ~63% de vencer a eleição (mercado 'Brazil Presidential Election'); 90% para vencer o 1º turno; Lula 96% e Flávio Bolsonaro 92% de chance de avançar ao 2º turno",
-    "polls": "1º turno (Quaest, 30/08–01/09): Lula 37% x Flávio Bolsonaro 30%. 2º turno, empate técnico: Datafolha (03/09) Lula 46% x Flávio 44%; PoderData/Aya (03/09) Flávio 45% x Lula 44%",
-    "ibov_vix": "sem print público específico da semana — fontes B3/mídia relatam índice acima de 20 pontos (faixa 'alta') em 2026 por risco político, sem número exato desta semana"
+    "asof": "14/09/2026",
+    "polymarket": "Virada em 10/09: Flávio Bolsonaro ~52% x Lula ~48% no mercado 'Brazil Presidential Election' (Lula estava ~63% até fim de agosto). Gatilho: crise institucional no STF (embate público sobre condução de provas/comando da polícia) energizou o eleitorado de direita",
+    "polls": "1º turno: Datafolha (11/09) Lula 39% x Flávio 35% x Cury 6% x Caiado 4% x Renan 3% x Zema 2%; Quaest (07/09) Lula 36% x Flávio 29%. 2º turno segue empate técnico — Datafolha ainda com Lula à frente, mas PoderData/AtlasIntel/Nexus já mostram Flávio empatado ou levemente à frente nas simulações",
+    "ibov_vix": "sem print público específico do índice S&P/B3 Ibovespa VIX desta semana — mantém-se a leitura anterior de patamar 'alto' (>20 pontos); Ibovespa (spot, via Actions) subiu ~3% no início de setembro, e a crise do STF mantém o prêmio de risco elevado às vésperas do 1º turno"
   }
 }
