@@ -1,28 +1,28 @@
 {
-  "updated": "22/09/2026 20:35 BRT  (2026-09-22T23:35Z)",
+  "updated": "23/09/2026 12:33 BRT  (2026-09-23T15:33Z)",
   "source": "Yahoo Finance / brapi.dev via GitHub Actions [yahoo]",
   "chips": {
-    "ibov": "~187.423"
+    "ibov": "~186.823"
   },
   "tickers": {
     "IBOV": {
-      "spot": 187423.0,
+      "spot": 186823.0,
       "iv": 28
     },
     "PETR4": {
-      "spot": 48.35,
+      "spot": 49.42,
       "iv": 47
     },
     "BBAS3": {
-      "spot": 22.67,
+      "spot": 22.43,
       "iv": 41
     },
     "ITUB4": {
-      "spot": 43.18,
+      "spot": 42.95,
       "iv": 26
     },
     "BBDC4": {
-      "spot": 18.43,
+      "spot": 18.4,
       "iv": 30
     }
   },
