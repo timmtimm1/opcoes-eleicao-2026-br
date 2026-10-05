@@ -7,23 +7,23 @@
   "tickers": {
     "IBOV": {
       "spot": 186823.0,
-      "iv": 30
+      "iv": 32
     },
     "PETR4": {
       "spot": 49.42,
-      "iv": 49
+      "iv": 52
     },
     "BBAS3": {
       "spot": 22.43,
-      "iv": 43
+      "iv": 46
     },
     "ITUB4": {
       "spot": 42.95,
-      "iv": 26
+      "iv": 27
     },
     "BBDC4": {
       "spot": 18.4,
-      "iv": 30
+      "iv": 31
     }
   },
   "notes": {
@@ -31,9 +31,9 @@
     "iv": "estimativa — NAO e atualizada pelo GitHub Actions; ajustada manualmente ou pela rotina Claude semanal"
   },
   "research": {
-    "asof": "28/09/2026",
-    "polymarket": "Flávio Bolsonaro consolida a liderança no mercado 'Brazil Presidential Election': ~57,3% x Lula ~43,5% em 26/09, a maior distância da série desde a virada de 10/09, sobre volume acumulado de >US$147 milhões",
-    "polls": "Datafolha (22-23/09, divulgada 24/09): 1º turno Lula 39% x Flávio 36% (vantagem encolheu de 5 para 4 pts ao longo de setembro); 2º turno segue empate técnico. AtlasIntel/Bloomberg (leva mais recente): 1º turno Lula 45,8% x Flávio 43,4%; 2º turno 47,7% x 47,4% — Lula volta a aparecer numericamente à frente no Atlas, revertendo o print de 17/09 que dava Flávio na frente (tudo dentro da margem de erro). Palver: 1º turno empate técnico 43% x 43%; 2º turno Flávio 48% x Lula 45%. RealTime Big Data: 1º turno Lula 41% x Flávio 37%; 2º turno Flávio 45% x Lula 44%. Leitura geral: corrida segue dentro da margem de erro, mercado (Polymarket) mais otimista com Flávio do que as pesquisas",
-    "ibov_vix": "Primeiro print público da série: o S&P/B3 Ibovespa VIX fechou a semana de 18/09/2026 em 30,17 pontos (+5,31% vs. semana anterior), mais que dobrando desde a semana de 12/07 (14,48 pts) — já no patamar 'muito alto' da escala B3 (>30; 'alto' é 25-30), 16 dias antes do 1º turno. Por isso subimos um pouco mais a IV de IBOV/PETR4/BBAS3 nesta rotina"
+    "asof": "05/10/2026",
+    "polymarket": "Virada confirmada: no mercado 'Brazil Presidential Election' o Polymarket agora precifica Flávio Bolsonaro como favorito claro para o 2º turno — ~62% x Lula ~37-38% em 05/10, forte alta frente aos ~57% x 43% da semana anterior, já reagindo ao resultado oficial do 1º turno de 04/10 (Flávio terminou na frente, contrariando boa parte das pesquisas)",
+    "polls": "1º turno realizado em 04/10/2026: nenhum candidato atingiu a maioria dos votos válidos — Flávio Bolsonaro terminou numericamente na frente de Lula (ordem de ~47% x ~45%, segundo apuração extraoficial; aguardar confirmação final do TSE), resultado que surpreendeu a maior parte das pesquisas de setembro (Datafolha, Palver, RealTime Big Data) que ainda davam Lula na frente no 1º turno. 2º turno confirmado para 25/10/2026 entre os dois. Leitura geral: a corrida agora é binária Lula x Flávio, e o mercado (Polymarket) está bem mais otimista com Flávio do que o 'empate técnico' que as pesquisas de 2º turno indicavam antes do 1º turno",
+    "ibov_vix": "Último print público confirmado: o S&P/B3 Ibovespa VIX fechou em 31,84 pontos em 28/09/2026 — recorde da série (iniciada em 2024) e patamar 'muito alto' na escala B3 (>30). Sem print mais recente disponível nesta rotina para o pós-1º-turno (05/10); mantivemos a leitura de volatilidade muito alta e subimos um pouco mais a IV de IBOV/PETR4/BBAS3, dado que o resultado oficial surpreendeu o consenso das pesquisas e abre 3 semanas de campanha decisiva até o 2º turno"
   }
 }
