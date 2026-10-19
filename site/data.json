@@ -7,23 +7,23 @@
   "tickers": {
     "IBOV": {
       "spot": 186823.0,
-      "iv": 33
+      "iv": 35
     },
     "PETR4": {
       "spot": 49.42,
-      "iv": 54
+      "iv": 57
     },
     "BBAS3": {
       "spot": 22.43,
-      "iv": 48
+      "iv": 51
     },
     "ITUB4": {
       "spot": 42.95,
-      "iv": 27
+      "iv": 28
     },
     "BBDC4": {
       "spot": 18.4,
-      "iv": 31
+      "iv": 32
     }
   },
   "notes": {
@@ -31,9 +31,9 @@
     "iv": "estimativa — NAO e atualizada pelo GitHub Actions; ajustada manualmente ou pela rotina Claude semanal"
   },
   "research": {
-    "asof": "12/10/2026",
-    "polymarket": "Disparada a favor de Flávio: no mercado 'Brazil Presidential Election' o Polymarket agora dá a Flávio Bolsonaro ~86-88% de chance de vitória no 2º turno x Lula ~12-13% (snapshots de 11-12/10) — forte alta frente aos ~62% x 38% de 05/10. O mercado de margem de vitória dá mais peso a uma vitória de Flávio por 4 a 8 pontos (~41-48% de probabilidade). Os preços mostram muito mais confiança na virada do que as pesquisas de intenção de voto",
-    "polls": "Datafolha de 08/10/2026: Flávio Bolsonaro 49% x Lula 45% no 2º turno (votos totais) — empate técnico, dentro da margem de erro de 2pp; em votos válidos, 52% x 48%. Levantamento anterior do Datafolha (03/10) tinha Lula 47% x Flávio 46%, mostrando oscilação recente. Leitura geral: as pesquisas continuam indicando corrida apertada/empate técnico, bem mais acirrada do que a disparada precificada pelo Polymarket — divergência grande entre pesquisa e mercado de apostas a ~2 semanas do 2º turno (25/10)",
-    "ibov_vix": "Sem print público confirmado pós-1º-turno até esta rotina (12/10). Último dado confirmado: o 'índice do medo' da B3 (VIX Brasil) bateu novo recorde da série em 01/10 (32,39 pts) e novamente em 02/10 (~32,77-33,21 pts, véspera do 1º turno), superando o recorde anterior de 31,84 pts (28/09). Mantivemos a leitura de volatilidade implícita em patamar historicamente alto e subimos um pouco mais a IV de IBOV/PETR4/BBAS3, dado o novo recorde e a divergência entre pesquisas (corrida apertada) e Polymarket (disparada a favor de Flávio), que mantém risco de surpresa/repricing forte até o 2º turno em 25/10"
+    "asof": "19/10/2026",
+    "polymarket": "Virada perdendo força: no mercado 'Brazil Presidential Election' o Polymarket agora dá a Flávio Bolsonaro ~77-79% de chance de vitória no 2º turno x Lula ~22-23% (19/10) — recuo relevante frente aos ~86-88% x 12-13% de 11-12/10. Kalshi mostra leitura parecida (~80% Flávio). Volume acumulado de ~US$188 milhões no mercado até 19/10. A tendência é de aproximação gradual entre o preço do mercado de apostas e o resultado das pesquisas, mas Polymarket ainda mantém Flávio como favorito claro a 6 dias do 2º turno",
+    "polls": "Datafolha de 15/10/2026: Flávio Bolsonaro 47% x Lula 45% no 2º turno (votos totais) — empate técnico, dentro da margem de erro de 2pp; em votos válidos, 51% x 49% (antes 52% x 48% em 08/10). A diferença entre os candidatos caiu de 4 para 2 pontos percentuais em uma semana; pesquisa feita após atos pró-Lula no fim de semana (13-15/10). Leitura geral: pesquisa e mercado de apostas convergem para uma corrida mais apertada do que a disparada precificada em meados de outubro, mas a distância entre os dois sinais ainda é grande a uma semana do 2º turno (25/10)",
+    "ibov_vix": "Sem novo print público confirmado desde 02/10 até esta rotina (19/10). Último dado oficial da B3: recorde da série em 01/10 (32,39 pts, divulgado como 32,89 no título do comunicado) e novo recorde em 02/10 (~32,77 pts), classificado como 'muito alto' (>30) pela metodologia S&P. Mantivemos a leitura de volatilidade implícita elevada e subimos um pouco mais a IV de IBOV/PETR4/BBAS3, dado o estreitamento simultâneo de pesquisa e mercado de apostas na última semana antes do 2º turno em 25/10, que mantém risco de repricing forte no período final"
   }
 }
