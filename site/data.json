@@ -7,23 +7,23 @@
   "tickers": {
     "IBOV": {
       "spot": 205083.0,
-      "iv": 35
+      "iv": 58
     },
     "PETR4": {
       "spot": 58.68,
-      "iv": 57
+      "iv": 78
     },
     "BBAS3": {
       "spot": 24.72,
-      "iv": 51
+      "iv": 72
     },
     "ITUB4": {
       "spot": 48.3,
-      "iv": 28
+      "iv": 42
     },
     "BBDC4": {
       "spot": 20.37,
-      "iv": 32
+      "iv": 44
     }
   },
   "notes": {
@@ -31,9 +31,9 @@
     "iv": "estimativa — NAO e atualizada pelo GitHub Actions; ajustada manualmente ou pela rotina Claude semanal"
   },
   "research": {
-    "asof": "19/10/2026",
-    "polymarket": "Virada perdendo força: no mercado 'Brazil Presidential Election' o Polymarket agora dá a Flávio Bolsonaro ~77-79% de chance de vitória no 2º turno x Lula ~22-23% (19/10) — recuo relevante frente aos ~86-88% x 12-13% de 11-12/10. Kalshi mostra leitura parecida (~80% Flávio). Volume acumulado de ~US$188 milhões no mercado até 19/10. A tendência é de aproximação gradual entre o preço do mercado de apostas e o resultado das pesquisas, mas Polymarket ainda mantém Flávio como favorito claro a 6 dias do 2º turno",
-    "polls": "Datafolha de 15/10/2026: Flávio Bolsonaro 47% x Lula 45% no 2º turno (votos totais) — empate técnico, dentro da margem de erro de 2pp; em votos válidos, 51% x 49% (antes 52% x 48% em 08/10). A diferença entre os candidatos caiu de 4 para 2 pontos percentuais em uma semana; pesquisa feita após atos pró-Lula no fim de semana (13-15/10). Leitura geral: pesquisa e mercado de apostas convergem para uma corrida mais apertada do que a disparada precificada em meados de outubro, mas a distância entre os dois sinais ainda é grande a uma semana do 2º turno (25/10)",
-    "ibov_vix": "Sem novo print público confirmado desde 02/10 até esta rotina (19/10). Último dado oficial da B3: recorde da série em 01/10 (32,39 pts, divulgado como 32,89 no título do comunicado) e novo recorde em 02/10 (~32,77 pts), classificado como 'muito alto' (>30) pela metodologia S&P. Mantivemos a leitura de volatilidade implícita elevada e subimos um pouco mais a IV de IBOV/PETR4/BBAS3, dado o estreitamento simultâneo de pesquisa e mercado de apostas na última semana antes do 2º turno em 25/10, que mantém risco de repricing forte no período final"
+    "asof": "26/10/2026",
+    "polymarket": "O 2º turno de 25/10 resolveu o mercado de apostas — e contra o que ele vinha precificando. O Polymarket ('Brazil Presidential Election') tinha Flávio Bolsonaro como favorito claro a poucos dias da eleição (~77-79% x Lula ~22-23% em 19/10), chegando a ~86-88% x 12-13% em meados de outubro. Lula venceu o 2º turno. Foi um dos maiores 'misses' do ciclo eleitoral para os mercados de predição, que haviam convergido com as pesquisas tarde demais",
+    "polls": "Resultado oficial do TSE (25/10, 99,9% das urnas apuradas): Lula reeleito com 51,77% dos votos válidos x Flávio Bolsonaro 48,23% — margem de ~3,5pp, mais larga que a virada de 2pp que o Datafolha de 15/10 vinha sinalizando, mas o 1º turno (04/10) já havia sido apertado (47,04% Flávio x 45,16% Lula). Reação de mercado nesta segunda (26/10): Ibovespa futuro abriu desabando ~14,8% (a ~177.215 pts, vindo do fechamento de 205.082 pts em 23/10) e o EWZ (ETF do MSCI Brazil, NYSE) caiu entre ~26% e ~30% no pré-mercado — sinal de que o resultado pegou o book de apostas/pesquisas posicionado no lado errado",
+    "ibov_vix": "Sem print oficial do S&P/B3 Ibovespa VIX (VXBR) confirmado para 26/10 até o fechamento desta rotina. Mantemos como referência o recorde da série em 02/10 (~32,77 pts, 'muito alto' na escala B3), mas o colapso do futuro do Ibovespa (-14,8%) e do EWZ (-26% a -30%) nas primeiras horas de hoje é, por si só, evidência de um choque de volatilidade bem acima daquele nível — subimos IBOV/PETR4/BBAS3 com maior intensidade (estatais, mais sensíveis à leitura fiscal de um governo Lula reeleito) e também ITUB4/BBDC4 (efeito contágio do tombo generalizado)"
   }
 }
