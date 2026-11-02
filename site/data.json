@@ -7,7 +7,7 @@
   "tickers": {
     "IBOV": {
       "spot": 167922.0,
-      "iv": 58
+      "iv": 62
     },
     "PETR4": {
       "spot": 52.71,
@@ -15,7 +15,7 @@
     },
     "BBAS3": {
       "spot": 16.47,
-      "iv": 72
+      "iv": 80
     },
     "ITUB4": {
       "spot": 38.69,
@@ -23,7 +23,7 @@
     },
     "BBDC4": {
       "spot": 13.86,
-      "iv": 44
+      "iv": 48
     }
   },
   "notes": {
@@ -31,9 +31,9 @@
     "iv": "estimativa — NAO e atualizada pelo GitHub Actions; ajustada manualmente ou pela rotina Claude semanal"
   },
   "research": {
-    "asof": "26/10/2026",
-    "polymarket": "O 2º turno de 25/10 resolveu o mercado de apostas — e contra o que ele vinha precificando. O Polymarket ('Brazil Presidential Election') tinha Flávio Bolsonaro como favorito claro a poucos dias da eleição (~77-79% x Lula ~22-23% em 19/10), chegando a ~86-88% x 12-13% em meados de outubro. Lula venceu o 2º turno. Foi um dos maiores 'misses' do ciclo eleitoral para os mercados de predição, que haviam convergido com as pesquisas tarde demais",
-    "polls": "Resultado oficial do TSE (25/10, 99,9% das urnas apuradas): Lula reeleito com 51,77% dos votos válidos x Flávio Bolsonaro 48,23% — margem de ~3,5pp, mais larga que a virada de 2pp que o Datafolha de 15/10 vinha sinalizando, mas o 1º turno (04/10) já havia sido apertado (47,04% Flávio x 45,16% Lula). Reação de mercado nesta segunda (26/10): Ibovespa futuro abriu desabando ~14,8% (a ~177.215 pts, vindo do fechamento de 205.082 pts em 23/10) e o EWZ (ETF do MSCI Brazil, NYSE) caiu entre ~26% e ~30% no pré-mercado — sinal de que o resultado pegou o book de apostas/pesquisas posicionado no lado errado",
-    "ibov_vix": "Sem print oficial do S&P/B3 Ibovespa VIX (VXBR) confirmado para 26/10 até o fechamento desta rotina. Mantemos como referência o recorde da série em 02/10 (~32,77 pts, 'muito alto' na escala B3), mas o colapso do futuro do Ibovespa (-14,8%) e do EWZ (-26% a -30%) nas primeiras horas de hoje é, por si só, evidência de um choque de volatilidade bem acima daquele nível — subimos IBOV/PETR4/BBAS3 com maior intensidade (estatais, mais sensíveis à leitura fiscal de um governo Lula reeleito) e também ITUB4/BBDC4 (efeito contágio do tombo generalizado)"
+    "asof": "02/11/2026",
+    "polymarket": "Mercado de apostas já resolvido — nada novo a registrar. O Polymarket ('Brazil Presidential Election') tinha Flávio Bolsonaro como favorito claro a poucos dias da eleição (~77-79% x Lula ~22-23% em 19/10), chegando a ~86-88% x 12-13% em meados de outubro. Lula venceu o 2º turno (25/10). Foi um dos maiores 'misses' do ciclo eleitoral para os mercados de predição, que haviam convergido com as pesquisas tarde demais",
+    "polls": "Sem pesquisa nova — o 2º turno já ocorreu. Resultado oficial do TSE (25/10, 99,9% das urnas apuradas): Lula reeleito com 51,77% dos votos válidos x Flávio Bolsonaro 48,23% (margem ~3,5pp). A semana de 26 a 30/10 mostrou que a reação inicial do mercado (choque de 1 dia) foi só o começo: Ibovespa caiu todos os 5 pregões pós-eleição — 26/10 -13,88% (176.608 pts, circuit breaker), 28/10 -2,68% (171.006 pts), 29/10 -1,06% (169.186 pts), 30/10 -0,75% (167.922 pts) — acumulando -18,12% na semana, bem mais que o susto de abertura de segunda",
+    "ibov_vix": "Primeiro print confirmado do S&P/B3 Ibovespa VIX (VXBR) pós-eleição: caiu >40% no pregão de 26-27/10 (do recorde pré-eleição de ~32,8-45,3 pts para ~23,6-26 pts) com o alívio de a incerteza eleitoral ter acabado — mas, ao longo da mesma semana, subiu de novo (~+50%) voltando a ~40 pts conforme o tombo da bolsa se aprofundava. Ou seja: a IV não teve o 'crush' limpo que se esperava, ficou colada perto do recorde. Catalisador adicional: Citi rebaixou Banco do Brasil (BBAS3) de neutra para venda e Bradesco (BBDC4), XP, B3 e BR Partners para neutra, citando pressão fiscal sob governo Lula reeleito (elevou Caixa Seguridade e Porto Seguro) — por isso subimos BBAS3 e BBDC4 com maior intensidade nesta rotina, mantendo IBOV/PETR4 elevados e ITUB4 estável (sem rebaixamento específico)"
   }
 }
